@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/diff2prompt/dist/schema.json",
+  "outputPath": "generated-prompt.txt",
+  "includeUntracked": true,
+  "maxConsoleLines": 30,
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "target",
+    ".gradle",
+    ".tools",
+    "generated-prompt.txt"
+  ],
+  "gitignoreFile": ".gitignore"
+}

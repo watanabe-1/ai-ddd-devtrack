@@ -1,0 +1,10 @@
+{
+  "name": "ai-ddd-devtrack",
+  "private": true,
+  "scripts": {
+    "diff2prompt": "diff2prompt"
+  },
+  "devDependencies": {
+    "diff2prompt": "^0.0.15"
+  }
+}
