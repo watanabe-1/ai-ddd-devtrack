@@ -1,12 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FormEvent } from "react";
+
 import { apiGet, apiPost } from "../../api/client";
 import type { LearningGoal, StudySession } from "../../types/api";
 
 export function StudySessionsPage() {
   const queryClient = useQueryClient();
-  const goals = useQuery({ queryKey: ["learning-goals"], queryFn: () => apiGet<LearningGoal[]>("/api/learning-goals/active") });
-  const sessions = useQuery({ queryKey: ["study-sessions", "recent"], queryFn: () => apiGet<StudySession[]>("/api/study-sessions/recent") });
+  const goals = useQuery({
+    queryKey: ["learning-goals"],
+    queryFn: () => apiGet<LearningGoal[]>("/api/learning-goals/active"),
+  });
+  const sessions = useQuery({
+    queryKey: ["study-sessions", "recent"],
+    queryFn: () => apiGet<StudySession[]>("/api/study-sessions/recent"),
+  });
   const recordSession = useMutation({
     mutationFn: (body: unknown) => apiPost<StudySession>("/api/study-sessions", body),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["study-sessions", "recent"] }),
@@ -27,11 +34,17 @@ export function StudySessionsPage() {
 
   return (
     <section>
-      <header className="pageHeader"><h2>Study Sessions</h2></header>
+      <header className="pageHeader">
+        <h2>Study Sessions</h2>
+      </header>
       <form onSubmit={onSubmit} className="form">
         <select name="learningGoalId" required>
           <option value="">Learning Goal</option>
-          {goals.data?.map((goal) => <option key={goal.id} value={goal.id}>{goal.title}</option>)}
+          {goals.data?.map((goal) => (
+            <option key={goal.id} value={goal.id}>
+              {goal.title}
+            </option>
+          ))}
         </select>
         <input name="studyDate" type="date" required />
         <input name="durationMinutes" type="number" min="1" placeholder="Minutes" required />
@@ -44,11 +57,12 @@ export function StudySessionsPage() {
         {sessions.data?.map((session) => (
           <li key={session.id}>
             <strong>{session.content}</strong>
-            <span>{session.studyDate} / {session.durationMinutes} min</span>
+            <span>
+              {session.studyDate} / {session.durationMinutes} min
+            </span>
           </li>
         ))}
       </ul>
     </section>
   );
 }
-

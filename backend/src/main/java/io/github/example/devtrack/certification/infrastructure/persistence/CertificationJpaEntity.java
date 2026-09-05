@@ -17,19 +17,17 @@ import java.util.UUID;
 @Entity
 @Table(name = "certifications")
 class CertificationJpaEntity {
-    @Id
-    UUID id;
-    String qualificationName;
-    UUID relatedLearningGoalId;
-    LocalDate plannedExamDate;
+  @Id UUID id;
+  String qualificationName;
+  UUID relatedLearningGoalId;
+  LocalDate plannedExamDate;
 
-    @Enumerated(EnumType.STRING)
-    CertificationStatus status;
+  @Enumerated(EnumType.STRING)
+  CertificationStatus status;
 
-    Instant createdAt;
-    Instant updatedAt;
+  Instant createdAt;
+  Instant updatedAt;
 
-    @OneToMany(mappedBy = "certification", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<ExamAttemptJpaEntity> attempts = new ArrayList<>();
+  @OneToMany(mappedBy = "certification", cascade = CascadeType.ALL, orphanRemoval = true)
+  List<ExamAttemptJpaEntity> attempts = new ArrayList<>();
 }
-

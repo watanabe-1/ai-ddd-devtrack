@@ -10,14 +10,12 @@ import java.util.UUID;
 @Entity
 @Table(name = "study_sessions")
 class StudySessionJpaEntity {
-    @Id
-    UUID id;
-    UUID learningGoalId;
-    LocalDate studyDate;
-    int durationMinutes;
-    String content;
-    String note;
-    Instant createdAt;
-    Instant updatedAt;
+  @Id UUID id;
+  UUID learningGoalId;
+  LocalDate studyDate;
+  int durationMinutes;
+  String content;
+  String note;
+  Instant createdAt;
+  Instant updatedAt;
 }
-

@@ -2,9 +2,20 @@
   "name": "ai-ddd-devtrack",
   "private": true,
   "scripts": {
-    "diff2prompt": "diff2prompt"
+    "build": "npm --prefix frontend run build && npm --prefix backend run build",
+    "check": "npm run lint && npm run typecheck",
+    "check:fix": "oxfmt . && oxlint --fix . && npm --prefix backend run format",
+    "diff2prompt": "diff2prompt",
+    "format:oxfmt": "oxfmt .",
+    "format:oxfmt:check": "oxfmt --check .",
+    "lint": "npm run format:oxfmt:check && oxlint . && npm --prefix backend run lint",
+    "lint:oxlint": "oxlint .",
+    "test": "npm --prefix backend test",
+    "typecheck": "npm --prefix frontend run typecheck"
   },
   "devDependencies": {
-    "diff2prompt": "^0.0.15"
+    "diff2prompt": "^0.0.15",
+    "oxfmt": "^0.66.0",
+    "oxlint": "^1.81.0"
   }
 }

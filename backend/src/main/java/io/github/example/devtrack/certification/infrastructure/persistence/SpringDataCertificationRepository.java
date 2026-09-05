@@ -6,6 +6,6 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 interface SpringDataCertificationRepository extends JpaRepository<CertificationJpaEntity, UUID> {
-    List<CertificationJpaEntity> findByPlannedExamDateGreaterThanEqualOrderByPlannedExamDateAsc(LocalDate referenceDate);
+  List<CertificationJpaEntity> findByPlannedExamDateGreaterThanEqualOrderByPlannedExamDateAsc(
+      LocalDate referenceDate);
 }
-

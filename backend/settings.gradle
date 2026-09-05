@@ -13,4 +13,3 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = 'ai-ddd-devtrack-backend'
-

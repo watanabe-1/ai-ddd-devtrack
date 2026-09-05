@@ -6,10 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LearningGoalRepository {
-    LearningGoal save(LearningGoal goal);
+  LearningGoal save(LearningGoal goal);
 
-    Optional<LearningGoal> findById(LearningGoalId id);
+  Optional<LearningGoal> findById(LearningGoalId id);
 
-    List<LearningGoal> findActive();
+  List<LearningGoal> findActive();
 }
-

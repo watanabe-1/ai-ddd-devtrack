@@ -1,6 +1,8 @@
 plugins {
     id 'java'
     id 'org.springframework.boot' version '4.1.1'
+    id 'checkstyle'
+    id 'com.diffplug.spotless' version '8.10.1'
 }
 
 group = 'io.github.example'
@@ -14,6 +16,33 @@ java {
 
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs.add('-parameters')
+}
+
+spotless {
+    java {
+        target 'src/**/*.java'
+        googleJavaFormat('1.36.1')
+        importOrder()
+        removeUnusedImports()
+        formatAnnotations()
+    }
+    format 'misc', {
+        target '*.gradle', '*.md', '*.yml', '*.yaml', 'src/**/*.sql'
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
+
+checkstyle {
+    toolVersion = '14.1.0'
+    configDirectory = file("$rootDir/config/checkstyle")
+}
+
+tasks.withType(Checkstyle).configureEach {
+    reports {
+        xml.required = true
+        html.required = true
+    }
 }
 
 dependencies {

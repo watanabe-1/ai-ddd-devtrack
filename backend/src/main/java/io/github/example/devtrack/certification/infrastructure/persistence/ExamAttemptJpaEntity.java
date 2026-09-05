@@ -15,19 +15,17 @@ import java.util.UUID;
 @Entity
 @Table(name = "exam_attempts")
 class ExamAttemptJpaEntity {
-    @Id
-    UUID id;
+  @Id UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "certification_id", nullable = false)
-    CertificationJpaEntity certification;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "certification_id", nullable = false)
+  CertificationJpaEntity certification;
 
-    LocalDate examDate;
-    LocalDate resultDate;
+  LocalDate examDate;
+  LocalDate resultDate;
 
-    @Enumerated(EnumType.STRING)
-    ExamOutcome outcome;
+  @Enumerated(EnumType.STRING)
+  ExamOutcome outcome;
 
-    String note;
+  String note;
 }
-

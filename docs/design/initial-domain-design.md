@@ -34,18 +34,18 @@ The initial non-functional and architectural constraints are:
 
 # Ubiquitous Language
 
-| Term | Meaning |
-| --- | --- |
-| Learning Goal | A technical learning objective such as learning Spring Boot, DDD, AWS, or GitHub Actions. |
-| Goal Status | The lifecycle state of a Learning Goal: planned, active, completed, or archived. |
-| Study Session | A record of actual learning activity performed for a Learning Goal. |
-| Study Date | The date on which a Study Session was performed. |
-| Study Duration | The amount of time spent in a Study Session. |
-| Study Content | The concrete topic or activity studied during a Study Session. |
-| Certification | A managed qualification or certification target. |
-| Exam Plan | A planned exam date for a Certification. |
-| Exam Attempt | A single exam-taking event for a Certification. |
-| Exam Result | The outcome of an Exam Attempt, such as passed, failed, or absent. |
+| Term                 | Meaning                                                                                                |
+| -------------------- | ------------------------------------------------------------------------------------------------------ |
+| Learning Goal        | A technical learning objective such as learning Spring Boot, DDD, AWS, or GitHub Actions.              |
+| Goal Status          | The lifecycle state of a Learning Goal: planned, active, completed, or archived.                       |
+| Study Session        | A record of actual learning activity performed for a Learning Goal.                                    |
+| Study Date           | The date on which a Study Session was performed.                                                       |
+| Study Duration       | The amount of time spent in a Study Session.                                                           |
+| Study Content        | The concrete topic or activity studied during a Study Session.                                         |
+| Certification        | A managed qualification or certification target.                                                       |
+| Exam Plan            | A planned exam date for a Certification.                                                               |
+| Exam Attempt         | A single exam-taking event for a Certification.                                                        |
+| Exam Result          | The outcome of an Exam Attempt, such as passed, failed, or absent.                                     |
 | Certification Status | The lifecycle state of a Certification: considering, preparing, scheduled, passed, failed, or retired. |
 
 # Bounded Context
@@ -105,28 +105,28 @@ Repository save unit:
 
 # Entities
 
-| Entity | Aggregate | Role |
-| --- | --- | --- |
-| LearningGoal | LearningGoal | Tracks the lifecycle of a learning objective. |
-| StudySession | StudySession | Records one completed study activity. |
+| Entity        | Aggregate     | Role                                             |
+| ------------- | ------------- | ------------------------------------------------ |
+| LearningGoal  | LearningGoal  | Tracks the lifecycle of a learning objective.    |
+| StudySession  | StudySession  | Records one completed study activity.            |
 | Certification | Certification | Tracks a certification target and exam progress. |
-| ExamAttempt | Certification | Records one exam-taking event and result. |
+| ExamAttempt   | Certification | Records one exam-taking event and result.        |
 
 # Value Objects
 
-| Value Object | Purpose |
-| --- | --- |
-| LearningGoalId | Identity for LearningGoal. |
-| StudySessionId | Identity for StudySession. |
-| CertificationId | Identity for Certification. |
-| ExamAttemptId | Identity for ExamAttempt. |
-| GoalTitle | Non-empty Learning Goal title. |
-| GoalPeriod | Start date and optional target date. |
-| StudyDuration | Positive study duration. |
+| Value Object        | Purpose                                    |
+| ------------------- | ------------------------------------------ |
+| LearningGoalId      | Identity for LearningGoal.                 |
+| StudySessionId      | Identity for StudySession.                 |
+| CertificationId     | Identity for Certification.                |
+| ExamAttemptId       | Identity for ExamAttempt.                  |
+| GoalTitle           | Non-empty Learning Goal title.             |
+| GoalPeriod          | Start date and optional target date.       |
+| StudyDuration       | Positive study duration.                   |
 | StudySessionContent | Non-empty study content and optional note. |
-| QualificationName | Non-empty certification name. |
-| ExamPlan | Optional planned exam date. |
-| ExamResult | Exam outcome and result date. |
+| QualificationName   | Non-empty certification name.              |
+| ExamPlan            | Optional planned exam date.                |
+| ExamResult          | Exam outcome and result date.              |
 
 # Invariants
 

@@ -12,10 +12,12 @@ AI coding agents working in this repository must follow these rules:
 6. Do not introduce Spring, JPA, HTTP, or database-specific dependencies into the domain layer.
 7. Do not create unnecessary repositories, domain services, or interfaces.
 8. After Java implementation, add or update unit tests and integration tests.
-9. Update Markdown design documentation at the end of implementation work.
-10. If PlantUML, Java, and Markdown conflict, use PlantUML as the baseline and report the conflict to the user.
-11. Do not fill unclear design decisions with large unreviewed changes.
-12. Always assume this repository may be public. Do not commit personal information, real study history, real exam results, passwords, API keys, tokens, `.env`, AWS credentials, or database credentials.
+9. After changing code, configuration, or documentation, run the relevant formatter, linter, typecheck, build, and test commands before reporting completion.
+10. If a relevant verification command cannot be run or fails for an unrelated existing issue, report the command, result, and reason clearly.
+11. Update Markdown design documentation at the end of implementation work.
+12. If PlantUML, Java, and Markdown conflict, use PlantUML as the baseline and report the conflict to the user.
+13. Do not fill unclear design decisions with large unreviewed changes.
+14. Always assume this repository may be public. Do not commit personal information, real study history, real exam results, passwords, API keys, tokens, `.env`, AWS credentials, or database credentials.
 
 # Windows shell encoding
 

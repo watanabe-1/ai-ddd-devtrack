@@ -45,6 +45,28 @@ The output is written to `generated-prompt.txt`. The command includes staged,
 unstaged, and untracked files by default, excluding build artifacts and local
 tool output.
 
+## Quality Checks
+
+Run all configured formatter, linter, and type checks from the repository root:
+
+```bash
+npm run check
+```
+
+Apply supported formatting and autofixes:
+
+```bash
+npm run check:fix
+```
+
+TypeScript and frontend files are checked with `oxfmt` and `oxlint`. Java files
+are formatted with Spotless using google-java-format and linted with Checkstyle.
+Backend tests remain available separately:
+
+```bash
+npm run test
+```
+
 ## Run Locally
 
 Start PostgreSQL:

@@ -9,16 +9,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface StudySessionRepository {
-    StudySession save(StudySession session);
+  StudySession save(StudySession session);
 
-    Optional<StudySession> findById(StudySessionId id);
+  Optional<StudySession> findById(StudySessionId id);
 
-    List<StudySession> findByLearningGoalId(LearningGoalId learningGoalId);
+  List<StudySession> findByLearningGoalId(LearningGoalId learningGoalId);
 
-    List<StudySession> findRecent(int limit);
+  List<StudySession> findRecent(int limit);
 
-    StudyDuration sumDurationByLearningGoalId(LearningGoalId learningGoalId);
+  StudyDuration sumDurationByLearningGoalId(LearningGoalId learningGoalId);
 
-    StudyDuration sumDurationBetween(LocalDate startDate, LocalDate endDate);
+  StudyDuration sumDurationBetween(LocalDate startDate, LocalDate endDate);
 }
-

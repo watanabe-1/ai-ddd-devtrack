@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+
 import { apiGet } from "../../api/client";
 import type { Dashboard } from "../../types/api";
 
@@ -34,14 +35,23 @@ export function DashboardPage() {
       <div className="grid">
         <section>
           <h3>Active Learning Goals</h3>
-          <ul>{data.activeGoals.map((goal) => <li key={goal.id}>{goal.title}</li>)}</ul>
+          <ul>
+            {data.activeGoals.map((goal) => (
+              <li key={goal.id}>{goal.title}</li>
+            ))}
+          </ul>
         </section>
         <section>
           <h3>Recent Study Sessions</h3>
-          <ul>{data.recentStudySessions.map((session) => <li key={session.id}>{session.studyDate} / {session.durationMinutes} min / {session.content}</li>)}</ul>
+          <ul>
+            {data.recentStudySessions.map((session) => (
+              <li key={session.id}>
+                {session.studyDate} / {session.durationMinutes} min / {session.content}
+              </li>
+            ))}
+          </ul>
         </section>
       </div>
     </section>
   );
 }
-

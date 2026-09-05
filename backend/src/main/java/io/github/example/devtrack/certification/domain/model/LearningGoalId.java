@@ -4,8 +4,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 public record LearningGoalId(UUID value) {
-    public LearningGoalId {
-        Objects.requireNonNull(value, "related learning goal id is required");
-    }
+  public LearningGoalId {
+    Objects.requireNonNull(value, "related learning goal id is required");
+  }
 }
-
