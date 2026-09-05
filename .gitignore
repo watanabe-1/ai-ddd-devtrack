@@ -4,6 +4,7 @@ out/
 target/
 node_modules/
 dist/
+.bun/
 .env
 .tools/
 generated-prompt.txt

@@ -31,14 +31,22 @@ Not implemented yet:
 
 - Java 21 or later
 - Docker
-- Node.js 22 or later
+- aqua 2.62.3 or later
+- Bun and Node.js managed by `aqua/aqua.yaml`
+
+Install aqua-managed tools:
+
+```bash
+aqua install
+bun install
+```
 
 ## Generate Diff Prompt
 
 Generate a prompt from the whole Git repository diff:
 
 ```bash
-npm run diff2prompt
+bun run diff2prompt
 ```
 
 The output is written to `generated-prompt.txt`. The command includes staged,
@@ -50,13 +58,13 @@ tool output.
 Run all configured formatter, linter, and type checks from the repository root:
 
 ```bash
-npm run check
+bun run check
 ```
 
 Apply supported formatting and autofixes:
 
 ```bash
-npm run check:fix
+bun run check:fix
 ```
 
 TypeScript and frontend files are checked with `oxfmt` and `oxlint`. Java files
@@ -64,7 +72,7 @@ are formatted with Spotless using google-java-format and linted with Checkstyle.
 Backend tests remain available separately:
 
 ```bash
-npm run test
+bun run test
 ```
 
 ## Run Locally
@@ -86,8 +94,7 @@ Run the frontend:
 
 ```bash
 cd frontend
-npm install
-npm run dev
+bun run dev
 ```
 
 Open:
