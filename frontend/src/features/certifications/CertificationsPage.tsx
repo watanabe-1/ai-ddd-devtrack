@@ -1,11 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FormEvent } from "react";
+
 import { apiGet, apiPost } from "../../api/client";
 import type { Certification } from "../../types/api";
 
 export function CertificationsPage() {
   const queryClient = useQueryClient();
-  const certifications = useQuery({ queryKey: ["certifications"], queryFn: () => apiGet<Certification[]>("/api/certifications") });
+  const certifications = useQuery({
+    queryKey: ["certifications"],
+    queryFn: () => apiGet<Certification[]>("/api/certifications"),
+  });
   const register = useMutation({
     mutationFn: (body: unknown) => apiPost<Certification>("/api/certifications", body),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["certifications"] }),
@@ -20,7 +24,9 @@ export function CertificationsPage() {
 
   return (
     <section>
-      <header className="pageHeader"><h2>Certifications</h2></header>
+      <header className="pageHeader">
+        <h2>Certifications</h2>
+      </header>
       <form onSubmit={onSubmit} className="form">
         <input name="qualificationName" placeholder="Qualification name" required />
         <button type="submit">Register</button>
@@ -37,4 +43,3 @@ export function CertificationsPage() {
     </section>
   );
 }
-

@@ -7,12 +7,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CertificationRepository {
-    Certification save(Certification certification);
+  Certification save(Certification certification);
 
-    Optional<Certification> findById(CertificationId id);
+  Optional<Certification> findById(CertificationId id);
 
-    List<Certification> findAll();
+  List<Certification> findAll();
 
-    List<Certification> findUpcomingExams(LocalDate referenceDate);
+  List<Certification> findUpcomingExams(LocalDate referenceDate);
 }
-

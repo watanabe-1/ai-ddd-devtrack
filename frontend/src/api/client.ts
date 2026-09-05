@@ -28,4 +28,3 @@ async function readError(response: Response): Promise<string> {
     return response.statusText;
   }
 }
-

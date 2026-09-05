@@ -18,4 +18,3 @@ springdoc:
 
 server:
   port: 8080
-

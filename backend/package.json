@@ -1,0 +1,11 @@
+{
+  "name": "ai-ddd-devtrack-backend",
+  "private": true,
+  "scripts": {
+    "build": "gradlew.bat build",
+    "format": "gradlew.bat spotlessApply",
+    "format:check": "gradlew.bat spotlessCheck",
+    "lint": "gradlew.bat checkstyleMain checkstyleTest spotlessCheck",
+    "test": "gradlew.bat test"
+  }
+}

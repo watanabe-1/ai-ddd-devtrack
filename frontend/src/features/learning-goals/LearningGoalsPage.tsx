@@ -1,11 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FormEvent } from "react";
+
 import { apiGet, apiPost } from "../../api/client";
 import type { LearningGoal } from "../../types/api";
 
 export function LearningGoalsPage() {
   const queryClient = useQueryClient();
-  const goals = useQuery({ queryKey: ["learning-goals"], queryFn: () => apiGet<LearningGoal[]>("/api/learning-goals/active") });
+  const goals = useQuery({
+    queryKey: ["learning-goals"],
+    queryFn: () => apiGet<LearningGoal[]>("/api/learning-goals/active"),
+  });
   const createGoal = useMutation({
     mutationFn: (body: unknown) => apiPost<LearningGoal>("/api/learning-goals", body),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["learning-goals"] }),
@@ -25,7 +29,9 @@ export function LearningGoalsPage() {
 
   return (
     <section>
-      <header className="pageHeader"><h2>Learning Goals</h2></header>
+      <header className="pageHeader">
+        <h2>Learning Goals</h2>
+      </header>
       <form onSubmit={onSubmit} className="form">
         <input name="title" placeholder="Title" required />
         <input name="description" placeholder="Description" />
@@ -45,4 +51,3 @@ export function LearningGoalsPage() {
     </section>
   );
 }
-

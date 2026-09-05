@@ -13,17 +13,15 @@ import java.util.UUID;
 @Entity
 @Table(name = "learning_goals")
 class LearningGoalJpaEntity {
-    @Id
-    UUID id;
-    String title;
-    String description;
-    LocalDate startDate;
-    LocalDate targetDate;
+  @Id UUID id;
+  String title;
+  String description;
+  LocalDate startDate;
+  LocalDate targetDate;
 
-    @Enumerated(EnumType.STRING)
-    GoalStatus status;
+  @Enumerated(EnumType.STRING)
+  GoalStatus status;
 
-    Instant createdAt;
-    Instant updatedAt;
+  Instant createdAt;
+  Instant updatedAt;
 }
-

@@ -6,6 +6,5 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 interface SpringDataLearningGoalRepository extends JpaRepository<LearningGoalJpaEntity, UUID> {
-    List<LearningGoalJpaEntity> findByStatus(GoalStatus status);
+  List<LearningGoalJpaEntity> findByStatus(GoalStatus status);
 }
-

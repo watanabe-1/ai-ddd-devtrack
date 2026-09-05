@@ -49,4 +49,3 @@ export type Dashboard = {
     plannedExamDate: string | null;
   }[];
 };
-
