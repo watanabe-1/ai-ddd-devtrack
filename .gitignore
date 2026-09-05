@@ -6,6 +6,8 @@ node_modules/
 dist/
 .env
 .tools/
+generated-prompt.txt
 .idea/
 .vscode/
 *.iml
+reset-dev.bat

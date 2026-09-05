@@ -30,9 +30,20 @@ Not implemented yet:
 ## Requirements
 
 - Java 21 or later
-- Gradle 8.14 or later
 - Docker
 - Node.js 22 or later
+
+## Generate Diff Prompt
+
+Generate a prompt from the whole Git repository diff:
+
+```bash
+npm run diff2prompt
+```
+
+The output is written to `generated-prompt.txt`. The command includes staged,
+unstaged, and untracked files by default, excluding build artifacts and local
+tool output.
 
 ## Run Locally
 
@@ -46,7 +57,7 @@ Run the backend:
 
 ```bash
 cd backend
-gradle bootRun
+./gradlew bootRun
 ```
 
 Run the frontend:
