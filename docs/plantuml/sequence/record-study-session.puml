@@ -1,0 +1,53 @@
+@startuml
+title Record Study Session
+
+actor User
+boundary "StudySessionController" as Controller
+control "LearningApplicationService" as App
+entity "LearningGoalRepository" as GoalRepo
+entity "StudySession" as Session
+entity "StudySessionRepository" as SessionRepo
+
+User -> Controller : POST /study-sessions
+Controller -> App : recordStudySession(command)
+App -> GoalRepo : findById(learningGoalId)
+GoalRepo --> App : LearningGoal
+App -> App : verify goal can accept study session
+App -> Session : create(learningGoalId, studyDate, duration, content)
+Session --> App : StudySession
+App -> SessionRepo : save(session)
+SessionRepo --> App : saved StudySession
+App --> Controller : result
+Controller --> User : 201 Created
+
+note right of App
+Type:
+Application Service
+
+Responsibility:
+Coordinate the use case and transaction.
+
+Business Rules:
+Loads LearningGoal to avoid recording study against an invalid goal.
+Delegates StudySession invariants to the domain model.
+
+Dependencies:
+Depends on domain repositories.
+end note
+
+note right of Session
+Type:
+Aggregate Root
+
+Responsibility:
+Validate and hold one study record.
+
+Invariants:
+Duration is positive and content is not blank.
+
+Persistence:
+Saved independently from LearningGoal.
+end note
+
+@enduml
+

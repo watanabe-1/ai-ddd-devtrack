@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: ai-ddd-devtrack
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/devtrack}
+    username: ${SPRING_DATASOURCE_USERNAME:devtrack}
+    password: ${SPRING_DATASOURCE_PASSWORD:devtrack}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+server:
+  port: 8080
+

@@ -1,0 +1,49 @@
+@startuml
+title Record Exam Result
+
+actor User
+boundary "CertificationController" as Controller
+control "CertificationApplicationService" as App
+entity "CertificationRepository" as Repo
+entity "Certification" as Certification
+
+User -> Controller : POST /certifications/{id}/exam-results
+Controller -> App : recordExamResult(command)
+App -> Repo : findById(certificationId)
+Repo --> App : Certification
+App -> Certification : recordExamResult(examAttempt)
+Certification -> Certification : append attempt
+Certification -> Certification : update status
+App -> Repo : save(certification)
+Repo --> App : saved Certification
+App --> Controller : result
+Controller --> User : 200 OK
+
+note right of Certification
+Type:
+Aggregate Root
+
+Responsibility:
+Own exam attempts and certification status.
+
+Invariants:
+ExamAttempt belongs to this Certification.
+Passing result changes status to PASSED.
+
+Persistence:
+Saved with ExamAttempt children as one aggregate.
+end note
+
+note right of App
+Type:
+Application Service
+
+Responsibility:
+Coordinate loading, invoking domain behavior, and saving.
+
+Business Rules:
+Does not directly mutate status. Status change is handled by Certification.
+end note
+
+@enduml
+

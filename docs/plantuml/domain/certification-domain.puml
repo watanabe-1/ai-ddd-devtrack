@@ -1,0 +1,133 @@
+@startuml
+title Certification Domain
+
+skinparam classAttributeIconSize 0
+
+package "certification.domain.model" {
+  class Certification <<Aggregate Root>> {
+    - id: CertificationId
+    - qualificationName: QualificationName
+    - relatedLearningGoalId: LearningGoalId
+    - examPlan: ExamPlan
+    - status: CertificationStatus
+    - attempts: List<ExamAttempt>
+    + relateToLearningGoal(learningGoalId)
+    + scheduleExam(examPlan)
+    + recordExamResult(attempt)
+    + isPassed()
+  }
+
+  class ExamAttempt <<Entity>> {
+    - id: ExamAttemptId
+    - examDate: LocalDate
+    - result: ExamResult
+  }
+
+  class CertificationId <<Value Object>>
+  class ExamAttemptId <<Value Object>>
+  class QualificationName <<Value Object>>
+  class LearningGoalId <<External Identity>>
+  class ExamPlan <<Value Object>>
+  class ExamResult <<Value Object>>
+
+  enum CertificationStatus {
+    CONSIDERING
+    PREPARING
+    SCHEDULED
+    PASSED
+    FAILED
+    RETIRED
+  }
+
+  enum ExamOutcome {
+    PASSED
+    FAILED
+    ABSENT
+  }
+}
+
+package "certification.domain.repository" {
+  interface CertificationRepository {
+    + save(certification)
+    + findById(id)
+    + findUpcomingExams(referenceDate)
+  }
+}
+
+Certification *-- CertificationId
+Certification *-- QualificationName
+Certification o-- LearningGoalId : optional related goal
+Certification *-- ExamPlan
+Certification *-- CertificationStatus
+Certification *-- "0..*" ExamAttempt
+ExamAttempt *-- ExamAttemptId
+ExamAttempt *-- ExamResult
+ExamResult *-- ExamOutcome
+
+CertificationRepository ..> Certification
+
+note right of Certification
+Type:
+Aggregate Root
+
+Responsibility:
+Manage a certification target, exam plan, exam attempts, and certification status.
+
+Aggregate boundary:
+Certification and its ExamAttempt entities.
+
+Invariants:
+- qualificationName is not blank
+- at most one current planned exam date
+- passing attempt changes status to PASSED
+- attempt belongs to exactly one Certification
+
+Business Rules:
+- scheduleExam() sets the planned exam date and status
+- recordExamResult() appends an ExamAttempt and updates status
+- Certification may optionally reference a LearningGoalId
+
+Dependencies:
+Pure Java only. LearningGoalId is an external identity, not an object reference.
+
+Persistence:
+Saved as one Certification aggregate including ExamAttempt children.
+end note
+
+note right of ExamAttempt
+Type:
+Entity
+
+Responsibility:
+Represent one exam-taking event for a Certification.
+
+Invariants:
+- examDate is required
+- result is required when the attempt is recorded
+
+Business Rules:
+No independent lifecycle outside Certification.
+
+Dependencies:
+Pure Java only
+
+Persistence:
+Persisted as part of Certification aggregate.
+end note
+
+note bottom of CertificationRepository
+Type:
+Repository
+
+Responsibility:
+Persist Certification aggregates and query upcoming exam plans.
+
+Business Rules:
+Does not update Certification status outside the aggregate.
+
+Persistence:
+Implemented by infrastructure persistence adapter.
+end note
+
+@enduml
+

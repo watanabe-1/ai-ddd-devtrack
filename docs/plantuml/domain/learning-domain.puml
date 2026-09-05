@@ -1,0 +1,142 @@
+@startuml
+title Learning Domain
+
+skinparam classAttributeIconSize 0
+
+package "learning.domain.model" {
+  class LearningGoal <<Aggregate Root>> {
+    - id: LearningGoalId
+    - title: GoalTitle
+    - description: GoalDescription
+    - period: GoalPeriod
+    - status: GoalStatus
+    + changeTitle(title)
+    + changeDescription(description)
+    + changePeriod(period)
+    + complete()
+    + isActive()
+  }
+
+  class StudySession <<Aggregate Root>> {
+    - id: StudySessionId
+    - learningGoalId: LearningGoalId
+    - studyDate: LocalDate
+    - duration: StudyDuration
+    - content: StudySessionContent
+    + revise(studyDate, duration, content)
+  }
+
+  class LearningGoalId <<Value Object>>
+  class StudySessionId <<Value Object>>
+  class GoalTitle <<Value Object>>
+  class GoalDescription <<Value Object>>
+  class GoalPeriod <<Value Object>>
+  class StudyDuration <<Value Object>>
+  class StudySessionContent <<Value Object>>
+
+  enum GoalStatus {
+    PLANNED
+    ACTIVE
+    COMPLETED
+    ARCHIVED
+  }
+}
+
+package "learning.domain.repository" {
+  interface LearningGoalRepository {
+    + save(goal)
+    + findById(id)
+    + findActive()
+  }
+
+  interface StudySessionRepository {
+    + save(session)
+    + findById(id)
+    + findByLearningGoalId(learningGoalId)
+    + sumDurationByLearningGoalId(learningGoalId)
+  }
+}
+
+LearningGoal *-- LearningGoalId
+LearningGoal *-- GoalTitle
+LearningGoal *-- GoalDescription
+LearningGoal *-- GoalPeriod
+LearningGoal *-- GoalStatus
+
+StudySession *-- StudySessionId
+StudySession --> LearningGoalId : references by identity
+StudySession *-- StudyDuration
+StudySession *-- StudySessionContent
+
+LearningGoalRepository ..> LearningGoal
+StudySessionRepository ..> StudySession
+
+note right of LearningGoal
+Type:
+Aggregate Root
+
+Responsibility:
+Manage a technical learning objective and its lifecycle.
+
+Aggregate boundary:
+LearningGoal only. StudySession is not owned.
+
+Invariants:
+- title is not blank
+- target date is not before start date
+- completed goal cannot be changed back to active in this design
+
+Business Rules:
+- complete() changes status to COMPLETED
+- active goals are queryable through repository
+
+Dependencies:
+Pure Java only
+
+Persistence:
+Saved as one LearningGoal aggregate
+end note
+
+note right of StudySession
+Type:
+Aggregate Root
+
+Responsibility:
+Record one actual learning activity.
+
+Aggregate boundary:
+StudySession only. LearningGoal is referenced by LearningGoalId.
+
+Invariants:
+- learningGoalId is required
+- studyDate is required
+- duration is positive
+- content is not blank
+
+Business Rules:
+- revise() can correct date, duration, content, and note
+- total study time is calculated from StudySession records
+- calculated study time may be zero when no sessions match
+
+Dependencies:
+Pure Java only
+
+Persistence:
+Saved as one StudySession aggregate
+end note
+
+note bottom of StudySessionRepository
+Type:
+Repository
+
+Responsibility:
+Persist StudySession and provide query operations needed by the learning context.
+
+Business Rules:
+Does not own duration calculation rules beyond aggregation query support.
+
+Persistence:
+Implemented by infrastructure persistence adapter.
+end note
+
+@enduml
