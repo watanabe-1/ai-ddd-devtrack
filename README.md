@@ -41,6 +41,12 @@ aqua install
 bun install
 ```
 
+If aqua warns about `aqua/aqua-policy.yaml`, review it and allow it locally:
+
+```bash
+aqua policy allow aqua/aqua-policy.yaml
+```
+
 ## Generate Diff Prompt
 
 Generate a prompt from the whole Git repository diff:
@@ -74,6 +80,16 @@ Backend tests remain available separately:
 ```bash
 bun run test
 ```
+
+## GitHub Actions
+
+Configured workflows:
+
+- `CI`: frontend Bun checks and backend Gradle build/test on Ubuntu and Windows
+- `autofix.ci`: applies supported formatter/autofix changes on pull requests
+- `GHA static checks`: runs actionlint, zizmor, and ghalint against GitHub Actions
+- `Label PRs`: applies labels from `.github/labeler.yml`
+- `Auto Approve`: approves non-draft pull requests opened by the repository owner
 
 ## Run Locally
 

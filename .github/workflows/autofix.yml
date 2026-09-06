@@ -1,0 +1,70 @@
+name: autofix.ci
+
+on:
+  pull_request:
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  autofix:
+    name: Autofix
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup toolchain
+        uses: ./.github/actions/setup-toolchain # zizmor: ignore[self-repository]
+        with:
+          setup-aqua: "true"
+          node-version: aqua
+          bun-version: aqua
+          bun-cache: "true"
+
+      - name: Setup Java
+        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: gradle
+
+      - name: Fix aqua-checksums.json
+        shell: bash
+        run: aqua upc -prune
+
+      - name: Install dependencies
+        shell: bash
+        env:
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+        run: |
+          if [ "$PR_AUTHOR" = "dependabot[bot]" ]; then
+            bun install
+          else
+            bun install --frozen-lockfile
+          fi
+
+      - name: Fix root files
+        shell: bash
+        run: |
+          bun run format:oxfmt
+          bun run lint:oxlint --fix
+
+      - name: Fix backend files
+        shell: bash
+        run: |
+          cd backend
+          chmod +x ./gradlew
+          ./gradlew --no-daemon spotlessApply
+
+      - name: Run autofix.ci
+        uses: autofix-ci/action@c5b2d67aa2274e7b5a18224e8171550871fc7e4a # v1.3.4
