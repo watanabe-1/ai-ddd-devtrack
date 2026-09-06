@@ -15,16 +15,34 @@
 
   <module name="TreeWalker">
     <module name="AvoidStarImport"/>
+    <module name="CyclomaticComplexity">
+      <property name="max" value="10"/>
+    </module>
     <module name="EmptyBlock">
       <property name="option" value="text"/>
     </module>
     <module name="LeftCurly"/>
+    <module name="LocalVariableName"/>
+    <module name="MemberName"/>
+    <module name="MethodLength">
+      <property name="max" value="60"/>
+    </module>
+    <module name="MethodName"/>
     <module name="ModifierOrder"/>
     <module name="MultipleVariableDeclarations"/>
     <module name="NeedBraces"/>
+    <module name="NestedIfDepth">
+      <property name="max" value="2"/>
+    </module>
     <module name="OneStatementPerLine"/>
     <module name="OuterTypeFilename"/>
+    <module name="PackageName"/>
+    <module name="ParameterName"/>
+    <module name="ParameterNumber">
+      <property name="max" value="7"/>
+    </module>
     <module name="RightCurly"/>
+    <module name="TypeName"/>
     <module name="UnusedImports"/>
     <module name="UpperEll"/>
     <module name="WhitespaceAfter"/>

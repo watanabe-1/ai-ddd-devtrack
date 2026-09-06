@@ -1,5 +1,6 @@
 .gradle/
 build/
+backend/bin/
 out/
 target/
 node_modules/
