@@ -64,7 +64,7 @@ LearningGoal *-- GoalPeriod
 LearningGoal *-- GoalStatus
 
 StudySession *-- StudySessionId
-StudySession --> LearningGoalId : references by identity
+StudySession --> LearningGoalId : identity で参照
 StudySession *-- StudyDuration
 StudySession *-- StudySessionContent
 
@@ -75,68 +75,68 @@ note right of LearningGoal
 Type:
 Aggregate Root
 
-Responsibility:
-Manage a technical learning objective and its lifecycle.
+責務:
+技術学習目標とその lifecycle を管理する。
 
 Aggregate boundary:
-LearningGoal only. StudySession is not owned.
+LearningGoal のみ。StudySession は所有しない。
 
-Invariants:
-- title is not blank
-- target date is not before start date
-- completed goal cannot be changed back to active in this design
+Invariant:
+- title は空ではない
+- target date は start date より前ではない
+- この設計では completed goal を active に戻せない
 
-Business Rules:
-- complete() changes status to COMPLETED
-- active goals are queryable through repository
+Business Rule:
+- complete() は status を COMPLETED に変更する
+- active goals は repository 経由で照会できる
 
-Dependencies:
-Pure Java only
+依存:
+Pure Java のみ
 
-Persistence:
-Saved as one LearningGoal aggregate
+永続化:
+1 つの LearningGoal aggregate として保存する
 end note
 
 note right of StudySession
 Type:
 Aggregate Root
 
-Responsibility:
-Record one actual learning activity.
+責務:
+実際に行った 1 件の学習活動を記録する。
 
 Aggregate boundary:
-StudySession only. LearningGoal is referenced by LearningGoalId.
+StudySession のみ。LearningGoal は LearningGoalId で参照する。
 
-Invariants:
-- learningGoalId is required
-- studyDate is required
-- duration is positive
-- content is not blank
+Invariant:
+- learningGoalId は必須
+- studyDate は必須
+- duration は正
+- content は空ではない
 
-Business Rules:
-- revise() can correct date, duration, content, and note
-- total study time is calculated from StudySession records
-- calculated study time may be zero when no sessions match
+Business Rule:
+- revise() は date、duration、content、note を修正できる
+- total study time は StudySession record から算出する
+- 一致する session がない場合、算出された study time は 0 になり得る
 
-Dependencies:
-Pure Java only
+依存:
+Pure Java のみ
 
-Persistence:
-Saved as one StudySession aggregate
+永続化:
+1 つの StudySession aggregate として保存する
 end note
 
 note bottom of StudySessionRepository
 Type:
 Repository
 
-Responsibility:
-Persist StudySession and provide query operations needed by the learning context.
+責務:
+StudySession を永続化し、learning context が必要とする query operation を提供する。
 
-Business Rules:
-Does not own duration calculation rules beyond aggregation query support.
+Business Rule:
+集計 query support を超えて duration calculation rule は所有しない。
 
-Persistence:
-Implemented by infrastructure persistence adapter.
+永続化:
+infrastructure persistence adapter が実装する。
 end note
 
 @enduml

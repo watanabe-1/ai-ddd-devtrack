@@ -1,5 +1,5 @@
 @startuml
-title ai-ddd-devtrack System Architecture
+title ai-ddd-devtrack システムアーキテクチャ
 
 skinparam componentStyle rectangle
 skinparam packageStyle rectangle
@@ -54,49 +54,48 @@ Frontend --> [TanStack Query API Client]
 [JPA Persistence Adapters] --> [Domain-JPA Mappers]
 [JPA Persistence Adapters] --> [Spring Data Repositories]
 [Spring Data Repositories] --> PostgreSQL
-[OpenAPI Definition] ..> [TanStack Query API Client] : future generated client
+[OpenAPI Definition] ..> [TanStack Query API Client] : 将来の generated client
 
 note right of [Learning Domain Model]
 Type:
-Pure Java domain model
+Pure Java の domain model
 
-Responsibility:
-Represent LearningGoal and StudySession behavior.
+責務:
+LearningGoal と StudySession の振る舞いを表現する。
 
-Dependencies:
-No Spring, JPA, HTTP, or PostgreSQL dependency.
+依存:
+Spring、JPA、HTTP、PostgreSQL に依存しない。
 
-Persistence:
-Saved through domain repository interfaces.
+永続化:
+domain repository interface 経由で保存する。
 end note
 
 note right of [Certification Domain Model]
 Type:
-Pure Java domain model
+Pure Java の domain model
 
-Responsibility:
-Represent Certification, exam planning, attempts, and results.
+責務:
+Certification、試験予定、受験、結果を表現する。
 
-Dependencies:
-No Spring, JPA, HTTP, or PostgreSQL dependency.
+依存:
+Spring、JPA、HTTP、PostgreSQL に依存しない。
 
-Persistence:
-Saved through domain repository interfaces.
+永続化:
+domain repository interface 経由で保存する。
 end note
 
 note bottom of [JPA Persistence Adapters]
 Type:
 Infrastructure adapter
 
-Responsibility:
-Convert between domain models and JPA entities.
+責務:
+domain model と JPA entity を相互変換する。
 
-Business Rules:
-Must not own domain invariants.
+Business Rule:
+domain invariant を所有しない。
 
-Dependencies:
-Spring Data JPA and PostgreSQL integration.
+依存:
+Spring Data JPA と PostgreSQL 連携を担う。
 end note
 
 @enduml
-

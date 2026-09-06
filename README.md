@@ -1,155 +1,149 @@
 # ai-ddd-devtrack
 
-AI coding agent and DDD sample project for managing technical learning goals, study sessions, and certification progress.
+技術学習の目標、学習記録、資格試験の進捗を管理するための、AI coding agent と DDD のサンプルプロジェクトです。
 
-This repository contains a small Spring Boot backend and a simple React frontend.
+このリポジトリには、小さな Spring Boot backend と、シンプルな React frontend が含まれています。
 
-## Design Source Of Truth
+## 設計の Source Of Truth
 
-PlantUML files under `docs/plantuml/` are the source of truth.
+`docs/plantuml/` 配下の PlantUML ファイルを source of truth とします。
 
-Before implementing backend, database, API, or frontend code, review the relevant PlantUML files first.
+Backend、database、API、frontend のコードを実装する前に、まず関連する PlantUML ファイルを確認してください。
 
-## Current Scope
+## 現在のスコープ
 
-Implemented:
+実装済み:
 
-- Initial DDD design documentation and PlantUML diagrams
-- Spring Boot REST API for Learning Goals, Study Sessions, Certifications, and Dashboard
-- PostgreSQL schema managed by Flyway
-- JPA adapters separated from pure Java domain models
-- Focused domain unit tests
-- Simple React/Vite UI for operating the API
+- 初期 DDD 設計ドキュメントと PlantUML 図
+- Learning Goals、Study Sessions、Certifications、Dashboard の Spring Boot REST API
+- Flyway で管理する PostgreSQL schema
+- pure Java の domain model から分離した JPA adapter
+- 焦点を絞った domain unit test
+- API を操作するためのシンプルな React/Vite UI
 
-Not implemented yet:
+未実装:
 
-- Full integration test coverage with Testcontainers
-- Authentication or multi-user support
+- Testcontainers を使った十分な integration test coverage
+- 認証または multi-user support
 
-## Requirements
+## 要件
 
-- Java 21 or later
+- Java 21 以降
 - Docker
-- aqua 2.62.3 or later
-- Bun and Node.js managed by `aqua/aqua.yaml`
+- aqua 2.62.3 以降
+- `aqua/aqua.yaml` で管理する Bun と Node.js
 
-Install aqua-managed tools:
+aqua 管理の tool をインストールします。
 
 ```bash
 aqua install
 bun install
 ```
 
-If aqua warns about `aqua/aqua-policy.yaml`, review it and allow it locally:
+`aqua/aqua-policy.yaml` に関する警告が aqua から出た場合は、内容を確認したうえで local に許可してください。
 
 ```bash
 aqua policy allow aqua/aqua-policy.yaml
 ```
 
-## Generate Diff Prompt
+## Diff Prompt の生成
 
-Generate a prompt from the whole Git repository diff:
+Git リポジトリ全体の差分から prompt を生成します。
 
 ```bash
 bun run diff2prompt
 ```
 
-The output is written to `generated-prompt.txt`. The command includes staged,
-unstaged, and untracked files by default, excluding build artifacts and local
-tool output.
+出力は `generated-prompt.txt` に書き込まれます。このコマンドは、build artifact と local tool output を除外し、デフォルトで staged、unstaged、untracked の各ファイルを含めます。
 
-## Quality Checks
+## 品質チェック
 
-Run all configured formatter, linter, and type checks from the repository root:
+リポジトリ root から、設定済みの formatter、linter、type check を実行します。
 
 ```bash
 bun run check
 ```
 
-Apply supported formatting and autofixes:
+対応している format と autofix を適用します。
 
 ```bash
 bun run check:fix
 ```
 
-TypeScript and frontend files are checked with `oxfmt` and `oxlint`. Java files
-are formatted with Spotless using google-java-format and linted with Checkstyle.
-Backend tests remain available separately:
+TypeScript と frontend files は `oxfmt` と `oxlint` で確認します。Java files は google-java-format を使う Spotless で整形し、Checkstyle で lint します。
+
+Backend test は別コマンドで実行できます。
 
 ```bash
 bun run test
 ```
 
-## Generate Frontend API Types
+## Frontend API 型の生成
 
-Start PostgreSQL and the backend, then generate TypeScript API types from the
-Springdoc OpenAPI document:
+PostgreSQL と backend を起動したうえで、Springdoc OpenAPI document から TypeScript API types を生成します。
 
 ```bash
 bun run generate:api
 ```
 
-The generated file is written to `frontend/src/api/generated/schema.ts`.
-Generation dependencies are isolated in the `tools/openapi-codegen` workspace,
-which pins TypeScript 5 for `openapi-typescript` while the frontend typechecks
-with TypeScript 7.
+生成されたファイルは `frontend/src/api/generated/schema.ts` に書き込まれます。
+
+生成用の依存関係は `tools/openapi-codegen` workspace に分離しています。この workspace では `openapi-typescript` 用に TypeScript 5 を固定し、frontend 側は TypeScript 7 で typecheck します。
 
 ## GitHub Actions
 
-Configured workflows:
+設定済み workflow:
 
-- `CI`: frontend Bun checks and backend Gradle build/test on Ubuntu and Windows
-- `autofix.ci`: applies supported formatter/autofix changes on pull requests
-- `GHA static checks`: runs actionlint, zizmor, and ghalint against GitHub Actions
-- `Label PRs`: applies labels from `.github/labeler.yml`
-- `Auto Approve`: approves non-draft pull requests opened by the repository owner
-- `Renovate`: updates aqua-managed tools
+- `CI`: Ubuntu と Windows で frontend の Bun checks と backend の Gradle build/test を実行する
+- `autofix.ci`: pull request に対して対応可能な formatter/autofix 変更を適用する
+- `GHA static checks`: GitHub Actions に対して actionlint、zizmor、ghalint を実行する
+- `Label PRs`: `.github/labeler.yml` に基づいて label を付与する
+- `Auto Approve`: repository owner が作成した non-draft pull request を approve する
+- `Renovate`: aqua 管理 tool を更新する
 
-## Dependency Updates
+## 依存関係の更新
 
-Dependabot is configured in `.github/dependabot.yml` for:
+Dependabot は `.github/dependabot.yml` で次を対象に設定しています。
 
-- Bun workspace dependencies, including the frontend workspace
-- Backend Gradle dependencies and Gradle wrapper
+- frontend workspace を含む Bun workspace dependencies
+- Backend Gradle dependencies と Gradle wrapper
 - Docker Compose images
 - GitHub Actions
 
-Dependabot runs as a GitHub-native service and does not require a repository
-secret for public dependencies.
+Dependabot は GitHub-native service として動作し、public dependency のために repository secret は不要です。
 
-Renovate is configured in `.github/renovate.json` only for aqua-managed tools,
-matching the existing aqua comments in `aqua/aqua.yaml`.
+Renovate は `.github/renovate.json` で aqua 管理 tool のみを対象に設定しています。これは `aqua/aqua.yaml` にある既存の aqua comment と対応しています。
 
-## Run Locally
+## ローカル実行
 
-Start PostgreSQL:
+PostgreSQL を起動します。
 
 ```bash
 docker compose up -d
 ```
 
-Run the backend:
+Backend を起動します。
 
 ```bash
 cd backend
 ./gradlew bootRun
 ```
 
-On Windows PowerShell:
+Windows PowerShell の場合:
 
 ```powershell
 cd backend
 .\gradlew.bat bootRun
 ```
 
-Run the frontend:
+Frontend を起動します。
 
 ```bash
 cd frontend
 bun run dev
 ```
 
-Open:
+開く URL:
 
 - Frontend: http://localhost:5173
 - OpenAPI JSON: http://localhost:8080/v3/api-docs
@@ -157,10 +151,10 @@ Open:
 
 ## Backend Package
 
-The current sample package is:
+現在のサンプル package:
 
 ```text
 io.github.example.devtrack
 ```
 
-Replace `example` with the target GitHub user or organization before publishing if desired.
+公開前に必要であれば、`example` を対象の GitHub user または organization に置き換えます。
