@@ -5,7 +5,10 @@
     "**/dist/**",
     "**/build/**",
     "**/.gradle/**",
-    "**/coverage/**"
+    "**/coverage/**",
+    "**/*.bat",
+    "**/*.cmd",
+    "**/*.ps1"
   ],
   "tabWidth": 2,
   "singleQuote": false,
