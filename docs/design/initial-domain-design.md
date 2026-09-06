@@ -184,6 +184,8 @@ Repository interfaces are placed in the domain package because they describe dom
 
 Domain models and JPA entities are separate. Infrastructure mappers convert between them.
 
+Flyway owns database schema migration. Hibernate validates the migrated schema at startup instead of creating or updating tables.
+
 # Backend Package
 
 Current sample package:
