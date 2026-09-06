@@ -106,6 +106,13 @@ cd backend
 ./gradlew bootRun
 ```
 
+On Windows PowerShell:
+
+```powershell
+cd backend
+.\gradlew.bat bootRun
+```
+
 Run the frontend:
 
 ```bash

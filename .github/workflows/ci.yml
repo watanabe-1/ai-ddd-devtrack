@@ -84,6 +84,7 @@ jobs:
           cache: gradle
 
       - name: Print versions
+        if: runner.os != 'Windows'
         shell: bash
         run: |
           java -version
@@ -91,12 +92,28 @@ jobs:
           chmod +x ./gradlew
           ./gradlew --version
 
+      - name: Print versions
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          java -version
+          cd backend
+          .\gradlew.bat --version
+
       - name: Build and test backend
+        if: runner.os != 'Windows'
         shell: bash
         run: |
           cd backend
           chmod +x ./gradlew
           ./gradlew --no-daemon build
+
+      - name: Build and test backend
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          cd backend
+          .\gradlew.bat --no-daemon build
 
   status-check:
     name: CI status check
