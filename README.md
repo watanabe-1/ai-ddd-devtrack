@@ -23,7 +23,6 @@ Implemented:
 
 Not implemented yet:
 
-- Generated TypeScript API client from OpenAPI
 - Full integration test coverage with Testcontainers
 - Authentication or multi-user support
 
@@ -80,6 +79,20 @@ Backend tests remain available separately:
 ```bash
 bun run test
 ```
+
+## Generate Frontend API Types
+
+Start PostgreSQL and the backend, then generate TypeScript API types from the
+Springdoc OpenAPI document:
+
+```bash
+bun run generate:api
+```
+
+The generated file is written to `frontend/src/api/generated/schema.ts`.
+Generation dependencies are isolated in the `tools/openapi-codegen` workspace,
+which pins TypeScript 5 for `openapi-typescript` while the frontend typechecks
+with TypeScript 7.
 
 ## GitHub Actions
 

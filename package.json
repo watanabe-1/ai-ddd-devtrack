@@ -3,13 +3,15 @@
   "private": true,
   "workspaces": [
     "frontend",
-    "backend"
+    "backend",
+    "tools/openapi-codegen"
   ],
   "scripts": {
     "build": "bun run --cwd frontend build && bun run --cwd backend build",
     "check": "bun run lint && bun run typecheck",
     "check:fix": "oxfmt . && oxlint --fix . && bun run --cwd backend format",
     "diff2prompt": "diff2prompt",
+    "generate:api": "bun run --cwd tools/openapi-codegen generate && oxfmt frontend/src/api/generated/schema.ts",
     "format:oxfmt": "oxfmt .",
     "format:oxfmt:check": "oxfmt --check .",
     "lint": "bun run format:oxfmt:check && oxlint . && bun run --cwd backend lint",
