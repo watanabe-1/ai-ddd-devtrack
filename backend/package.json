@@ -2,10 +2,10 @@
   "name": "ai-ddd-devtrack-backend",
   "private": true,
   "scripts": {
-    "build": "./gradlew.bat build",
-    "format": "./gradlew.bat spotlessApply",
-    "format:check": "./gradlew.bat spotlessCheck",
-    "lint": "./gradlew.bat checkstyleMain checkstyleTest spotlessCheck",
-    "test": "./gradlew.bat test"
+    "build": "node scripts/run-gradle.mjs build",
+    "format": "node scripts/run-gradle.mjs spotlessApply",
+    "format:check": "node scripts/run-gradle.mjs spotlessCheck",
+    "lint": "node scripts/run-gradle.mjs checkstyleMain checkstyleTest spotlessCheck",
+    "test": "node scripts/run-gradle.mjs test"
   }
 }
