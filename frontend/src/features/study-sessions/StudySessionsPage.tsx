@@ -2,20 +2,20 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FormEvent } from "react";
 
 import { apiGet, apiPost } from "../../api/client";
-import type { LearningGoal, StudySession } from "../../types/api";
+import type { RecordStudySessionRequest } from "../../api/types";
 
 export function StudySessionsPage() {
   const queryClient = useQueryClient();
   const goals = useQuery({
     queryKey: ["learning-goals"],
-    queryFn: () => apiGet<LearningGoal[]>("/api/learning-goals/active"),
+    queryFn: () => apiGet("/api/learning-goals/active"),
   });
   const sessions = useQuery({
     queryKey: ["study-sessions", "recent"],
-    queryFn: () => apiGet<StudySession[]>("/api/study-sessions/recent"),
+    queryFn: () => apiGet("/api/study-sessions/recent"),
   });
   const recordSession = useMutation({
-    mutationFn: (body: unknown) => apiPost<StudySession>("/api/study-sessions", body),
+    mutationFn: (body: RecordStudySessionRequest) => apiPost("/api/study-sessions", body),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["study-sessions", "recent"] }),
   });
 
@@ -23,11 +23,11 @@ export function StudySessionsPage() {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     recordSession.mutate({
-      learningGoalId: form.get("learningGoalId"),
-      studyDate: form.get("studyDate"),
+      learningGoalId: String(form.get("learningGoalId")),
+      studyDate: String(form.get("studyDate")),
       durationMinutes: Number(form.get("durationMinutes")),
-      content: form.get("content"),
-      note: form.get("note"),
+      content: String(form.get("content")),
+      note: String(form.get("note") ?? ""),
     });
     event.currentTarget.reset();
   }
@@ -42,7 +42,7 @@ export function StudySessionsPage() {
           <option value="">Learning Goal</option>
           {goals.data?.map((goal) => (
             <option key={goal.id} value={goal.id}>
-              {goal.title}
+              {goal.title ?? goal.id}
             </option>
           ))}
         </select>
@@ -56,9 +56,9 @@ export function StudySessionsPage() {
       <ul className="list">
         {sessions.data?.map((session) => (
           <li key={session.id}>
-            <strong>{session.content}</strong>
+            <strong>{session.content ?? session.id}</strong>
             <span>
-              {session.studyDate} / {session.durationMinutes} min
+              {session.studyDate ?? "-"} / {session.durationMinutes ?? 0} min
             </span>
           </li>
         ))}

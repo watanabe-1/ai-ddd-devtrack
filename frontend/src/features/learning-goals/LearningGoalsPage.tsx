@@ -2,16 +2,16 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FormEvent } from "react";
 
 import { apiGet, apiPost } from "../../api/client";
-import type { LearningGoal } from "../../types/api";
+import type { LearningGoalRequest } from "../../api/types";
 
 export function LearningGoalsPage() {
   const queryClient = useQueryClient();
   const goals = useQuery({
     queryKey: ["learning-goals"],
-    queryFn: () => apiGet<LearningGoal[]>("/api/learning-goals/active"),
+    queryFn: () => apiGet("/api/learning-goals/active"),
   });
   const createGoal = useMutation({
-    mutationFn: (body: unknown) => apiPost<LearningGoal>("/api/learning-goals", body),
+    mutationFn: (body: LearningGoalRequest) => apiPost("/api/learning-goals", body),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["learning-goals"] }),
   });
 
@@ -19,10 +19,10 @@ export function LearningGoalsPage() {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     createGoal.mutate({
-      title: form.get("title"),
-      description: form.get("description"),
-      startDate: form.get("startDate"),
-      targetDate: form.get("targetDate") || null,
+      title: String(form.get("title")),
+      description: String(form.get("description") ?? ""),
+      startDate: String(form.get("startDate")),
+      targetDate: String(form.get("targetDate") || "") || undefined,
     });
     event.currentTarget.reset();
   }
@@ -43,8 +43,8 @@ export function LearningGoalsPage() {
       <ul className="list">
         {goals.data?.map((goal) => (
           <li key={goal.id}>
-            <strong>{goal.title}</strong>
-            <span>{goal.status}</span>
+            <strong>{goal.title ?? goal.id}</strong>
+            <span>{goal.status ?? "UNKNOWN"}</span>
           </li>
         ))}
       </ul>
