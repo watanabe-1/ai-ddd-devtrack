@@ -14,8 +14,9 @@
     "generate:api": "bun run --cwd tools/openapi-codegen generate && oxfmt frontend/src/api/generated/schema.ts",
     "format:oxfmt": "oxfmt .",
     "format:oxfmt:check": "oxfmt --check .",
-    "lint": "bun run format:oxfmt:check && oxlint . && bun run --cwd backend lint",
+    "lint": "bun run format:oxfmt:check && oxlint . && bun run lint:todo && bun run --cwd backend lint",
     "lint:oxlint": "oxlint .",
+    "lint:todo": "node scripts/check-todo-comments.mjs",
     "test": "bun run --cwd backend test",
     "typecheck": "bun run --cwd frontend typecheck"
   },

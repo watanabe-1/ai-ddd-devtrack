@@ -10,8 +10,13 @@ import { StudySessionsPage } from "./features/study-sessions/StudySessionsPage";
 import "./styles.css";
 
 const queryClient = new QueryClient();
+const rootElement = document.getElementById("root");
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+if (rootElement === null) {
+  throw new Error("root element is required");
+}
+
+ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>

@@ -53,6 +53,10 @@ jobs:
         shell: bash
         run: bun run lint:oxlint
 
+      - name: Lint TODO comments
+        shell: bash
+        run: bun run lint:todo
+
       - name: Typecheck frontend
         shell: bash
         run: bun run --cwd frontend typecheck
@@ -115,6 +119,88 @@ jobs:
           cd backend
           .\gradlew.bat --no-daemon build
 
+  api-contract:
+    name: API contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: devtrack
+          POSTGRES_USER: devtrack
+          POSTGRES_PASSWORD: devtrack
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U devtrack -d devtrack"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup toolchain
+        uses: ./.github/actions/setup-toolchain # zizmor: ignore[self-repository]
+        with:
+          node-version: aqua
+          bun-version: aqua
+          bun-cache: "true"
+
+      - name: Setup Java
+        uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: gradle
+
+      - name: Install dependencies
+        shell: bash
+        run: bun install --frozen-lockfile
+
+      - name: Start backend
+        shell: bash
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/devtrack
+          SPRING_DATASOURCE_USERNAME: devtrack
+          SPRING_DATASOURCE_PASSWORD: devtrack
+        run: |
+          cd backend
+          chmod +x ./gradlew
+          ./gradlew --no-daemon bootRun > ../backend.log 2>&1 &
+          echo "$!" > ../backend.pid
+
+      - name: Wait for OpenAPI
+        shell: bash
+        run: |
+          for attempt in {1..60}; do
+            if curl --fail --silent http://localhost:8080/v3/api-docs > /dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          cat backend.log
+          exit 1
+
+      - name: Check generated API types
+        shell: bash
+        run: |
+          bun run generate:api
+          git diff --exit-code -- frontend/src/api/generated/schema.ts
+
+      - name: Stop backend
+        if: always()
+        shell: bash
+        run: |
+          if [ -f backend.pid ]; then
+            kill "$(cat backend.pid)" || true
+          fi
+
   status-check:
     name: CI status check
     runs-on: ubuntu-latest
@@ -123,15 +209,18 @@ jobs:
     needs:
       - frontend
       - backend
+      - api-contract
     steps:
       - name: Check required job results
         env:
           FRONTEND_RESULT: ${{ needs.frontend.result }}
           BACKEND_RESULT: ${{ needs.backend.result }}
+          API_CONTRACT_RESULT: ${{ needs.api-contract.result }}
         run: |
-          if [ "$FRONTEND_RESULT" = "success" ] && [ "$BACKEND_RESULT" = "success" ]; then
+          if [ "$FRONTEND_RESULT" = "success" ] && [ "$BACKEND_RESULT" = "success" ] && [ "$API_CONTRACT_RESULT" = "success" ]; then
             exit 0
           fi
           echo "frontend result: $FRONTEND_RESULT"
           echo "backend result: $BACKEND_RESULT"
+          echo "api contract result: $API_CONTRACT_RESULT"
           exit 1

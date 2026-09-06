@@ -70,7 +70,9 @@ bun run check
 bun run check:fix
 ```
 
-TypeScript と frontend files は `oxfmt` と `oxlint` で確認します。Java files は google-java-format を使う Spotless で整形し、Checkstyle で lint します。
+TypeScript と frontend files は `oxfmt` と `oxlint` で確認します。Java files は google-java-format を使う Spotless で整形し、Checkstyle で lint します。Backend の layer dependency は ArchUnit test で確認します。レビューでは、自動チェックで検出できる内容ではなく、設計、責務、命名、コメント、テスト観点を中心に確認します。
+
+コーディング規約は [`docs/development/coding-standards.md`](docs/development/coding-standards.md) を参照してください。
 
 Backend test は別コマンドで実行できます。
 

@@ -7,8 +7,14 @@
     "**/.gradle/**",
     "**/coverage/**"
   ],
+  "plugins": ["typescript", "unicorn", "oxc", "react"],
   "options": {
     "reportUnusedDisableDirectives": "error"
+  },
+  "settings": {
+    "react": {
+      "version": "19.1.1"
+    }
   },
   "rules": {
     "eqeqeq": "error",
@@ -20,6 +26,12 @@
         "caughtErrorsIgnorePattern": "^_",
         "destructuredArrayIgnorePattern": "^_"
       }
-    ]
+    ],
+    "react/exhaustive-deps": "error",
+    "react/jsx-key": "error",
+    "react/no-unknown-property": "error",
+    "react/rules-of-hooks": "error",
+    "typescript/no-explicit-any": "error",
+    "typescript/no-non-null-assertion": "error"
   }
 }

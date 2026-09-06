@@ -162,6 +162,27 @@ jobs:
         shell: bash
         run: exit 1
 
+  secret-scan:
+    name: gitleaks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup toolchain
+        uses: ./.github/actions/setup-toolchain # zizmor: ignore[self-repository]
+        with:
+          setup-aqua: "true"
+
+      - name: Run gitleaks
+        shell: bash
+        run: gitleaks dir . --redact --no-banner
+
   status-check:
     name: GHA static checks status check
     runs-on: ubuntu-latest
@@ -171,17 +192,20 @@ jobs:
       - actionlint
       - zizmor
       - ghalint
+      - secret-scan
     steps:
       - name: Check required job results
         env:
           ACTIONLINT_RESULT: ${{ needs.actionlint.result }}
           ZIZMOR_RESULT: ${{ needs.zizmor.result }}
           GHALINT_RESULT: ${{ needs.ghalint.result }}
+          SECRET_SCAN_RESULT: ${{ needs.secret-scan.result }}
         run: |
-          if [ "$ACTIONLINT_RESULT" = "success" ] && [ "$ZIZMOR_RESULT" = "success" ] && [ "$GHALINT_RESULT" = "success" ]; then
+          if [ "$ACTIONLINT_RESULT" = "success" ] && [ "$ZIZMOR_RESULT" = "success" ] && [ "$GHALINT_RESULT" = "success" ] && [ "$SECRET_SCAN_RESULT" = "success" ]; then
             exit 0
           fi
           echo "actionlint result: $ACTIONLINT_RESULT"
           echo "zizmor result: $ZIZMOR_RESULT"
           echo "ghalint result: $GHALINT_RESULT"
+          echo "secret scan result: $SECRET_SCAN_RESULT"
           exit 1

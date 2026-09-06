@@ -22,3 +22,4 @@ packages:
   - name: suzuki-shunsuke/ghalint@v1.5.6
   - name: zizmorcore/zizmor@v1.30.0
   - name: suzuki-shunsuke/pinact@v4.1.1
+  - name: gitleaks/gitleaks@v8.30.1
