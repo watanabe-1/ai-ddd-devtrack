@@ -56,7 +56,7 @@ package "certification.domain.repository" {
 
 Certification *-- CertificationId
 Certification *-- QualificationName
-Certification o-- LearningGoalId : optional related goal
+Certification o-- LearningGoalId : 任意の関連 goal
 Certification *-- ExamPlan
 Certification *-- CertificationStatus
 Certification *-- "0..*" ExamAttempt
@@ -70,64 +70,63 @@ note right of Certification
 Type:
 Aggregate Root
 
-Responsibility:
-Manage a certification target, exam plan, exam attempts, and certification status.
+責務:
+certification target、exam plan、exam attempt、certification status を管理する。
 
 Aggregate boundary:
-Certification and its ExamAttempt entities.
+Certification とその ExamAttempt entities。
 
-Invariants:
-- qualificationName is not blank
-- at most one current planned exam date
-- passing attempt changes status to PASSED
-- attempt belongs to exactly one Certification
+Invariant:
+- qualificationName は空ではない
+- 現在の planned exam date は最大 1 つ
+- passed attempt は status を PASSED に変更する
+- attempt は必ず 1 つの Certification に属する
 
-Business Rules:
-- scheduleExam() sets the planned exam date and status
-- recordExamResult() appends an ExamAttempt and updates status
-- Certification may optionally reference a LearningGoalId
+Business Rule:
+- scheduleExam() は planned exam date と status を設定する
+- recordExamResult() は ExamAttempt を追加し、status を更新する
+- Certification は任意で LearningGoalId を参照できる
 
-Dependencies:
-Pure Java only. LearningGoalId is an external identity, not an object reference.
+依存:
+Pure Java のみ。LearningGoalId は object reference ではなく external identity。
 
-Persistence:
-Saved as one Certification aggregate including ExamAttempt children.
+永続化:
+ExamAttempt 子要素を含む 1 つの Certification aggregate として保存する。
 end note
 
 note right of ExamAttempt
 Type:
 Entity
 
-Responsibility:
-Represent one exam-taking event for a Certification.
+責務:
+Certification に対する 1 回の受験イベントを表現する。
 
-Invariants:
-- examDate is required
-- result is required when the attempt is recorded
+Invariant:
+- examDate は必須
+- attempt を記録するとき result は必須
 
-Business Rules:
-No independent lifecycle outside Certification.
+Business Rule:
+Certification の外側に独立した lifecycle を持たない。
 
-Dependencies:
-Pure Java only
+依存:
+Pure Java のみ
 
-Persistence:
-Persisted as part of Certification aggregate.
+永続化:
+Certification aggregate の一部として永続化する。
 end note
 
 note bottom of CertificationRepository
 Type:
 Repository
 
-Responsibility:
-Persist Certification aggregates and query upcoming exam plans.
+責務:
+Certification aggregate を永続化し、upcoming exam plan を照会する。
 
-Business Rules:
-Does not update Certification status outside the aggregate.
+Business Rule:
+aggregate の外側で Certification status を更新しない。
 
-Persistence:
-Implemented by infrastructure persistence adapter.
+永続化:
+infrastructure persistence adapter が実装する。
 end note
 
 @enduml
-

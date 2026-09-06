@@ -1,200 +1,200 @@
-# Overview
+# 概要
 
-`ai-ddd-devtrack` manages technical learning and certification preparation.
+`ai-ddd-devtrack` は、技術学習と資格試験準備を管理するアプリケーションです。
 
-The application has two goals:
+このアプリケーションには、次の 2 つの目的があります。
 
-- Be useful as a personal learning and certification tracker.
-- Be publishable as a public sample of AI-assisted development with DDD and Spring Boot.
+- 個人の学習管理・資格試験準備トラッカーとして役に立つこと。
+- DDD と Spring Boot を使った AI 支援開発の公開サンプルとして提示できること。
 
-PlantUML is the design source of truth. This Markdown document explains the current design decisions for human review and must be kept consistent with the PlantUML files.
+PlantUML を設計の source of truth とします。この Markdown ドキュメントは、人間がレビューしやすいように現在の設計判断を説明するものであり、PlantUML ファイルと整合している必要があります。
 
-# Requirements
+# 要件
 
-The initial functional scope is:
+初期スコープの機能要件は次のとおりです。
 
-- Create, update, complete, and query active Learning Goals.
-- Record and revise Study Sessions.
-- Browse study history.
-- Aggregate study time.
-- Register Certifications.
-- Set exam schedules.
-- Record exam results.
-- Check certification status.
+- active な Learning Goal を作成、更新、完了、照会できる。
+- Study Session を記録、修正できる。
+- 学習履歴を閲覧できる。
+- 学習時間を集計できる。
+- Certification を登録できる。
+- 試験予定を設定できる。
+- 試験結果を記録できる。
+- Certification の状態を確認できる。
 
-The initial non-functional and architectural constraints are:
+初期スコープの非機能要件とアーキテクチャ制約は次のとおりです。
 
-- Backend uses Java 21 or later, Spring Boot, Gradle, PostgreSQL, Spring Data JPA, Flyway, Bean Validation, JUnit 5, Testcontainers, and OpenAPI.
-- Frontend uses React, TypeScript, Vite, React Router, and TanStack Query.
-- Domain models should remain pure Java.
-- JPA entities must be separated from domain models.
-- Repository interfaces belong to the domain side; implementations belong to infrastructure.
-- Controllers must not contain business logic.
-- Public repository safety must be maintained.
+- Backend は Java 21 以降、Spring Boot、Gradle、PostgreSQL、Spring Data JPA、Flyway、Bean Validation、JUnit 5、Testcontainers、OpenAPI を使う。
+- Frontend は React、TypeScript、Vite、React Router、TanStack Query を使う。
+- Domain model は pure Java のままにする。
+- JPA entity は domain model から分離する。
+- Repository interface は domain 側に置き、実装は infrastructure 側に置く。
+- Controller に business logic を持たせない。
+- Public repository として安全に公開できる状態を保つ。
 
-# Ubiquitous Language
+# ユビキタス言語
 
-| Term                 | Meaning                                                                                                |
-| -------------------- | ------------------------------------------------------------------------------------------------------ |
-| Learning Goal        | A technical learning objective such as learning Spring Boot, DDD, AWS, or GitHub Actions.              |
-| Goal Status          | The lifecycle state of a Learning Goal: planned, active, completed, or archived.                       |
-| Study Session        | A record of actual learning activity performed for a Learning Goal.                                    |
-| Study Date           | The date on which a Study Session was performed.                                                       |
-| Study Duration       | The amount of time spent in a Study Session.                                                           |
-| Study Content        | The concrete topic or activity studied during a Study Session.                                         |
-| Certification        | A managed qualification or certification target.                                                       |
-| Exam Plan            | A planned exam date for a Certification.                                                               |
-| Exam Attempt         | A single exam-taking event for a Certification.                                                        |
-| Exam Result          | The outcome of an Exam Attempt, such as passed, failed, or absent.                                     |
-| Certification Status | The lifecycle state of a Certification: considering, preparing, scheduled, passed, failed, or retired. |
+| 用語                 | 意味                                                                                             |
+| -------------------- | ------------------------------------------------------------------------------------------------ |
+| Learning Goal        | Spring Boot、DDD、AWS、GitHub Actions などの技術学習目標。                                       |
+| Goal Status          | Learning Goal のライフサイクル状態。planned、active、completed、archived のいずれか。            |
+| Study Session        | Learning Goal に対して実際に行った学習活動の記録。                                               |
+| Study Date           | Study Session を実施した日付。                                                                   |
+| Study Duration       | Study Session で学習に使った時間。                                                               |
+| Study Content        | Study Session で学習した具体的なトピックや作業内容。                                             |
+| Certification        | 管理対象の資格または認定試験の目標。                                                             |
+| Exam Plan            | Certification に対する受験予定日。                                                               |
+| Exam Attempt         | Certification に対する 1 回の受験イベント。                                                      |
+| Exam Result          | Exam Attempt の結果。passed、failed、absent など。                                               |
+| Certification Status | Certification のライフサイクル状態。considering、preparing、scheduled、passed、failed、retired。 |
 
-# Bounded Context
+# 境界づけられたコンテキスト
 
-The initial design uses two bounded contexts:
+初期設計では、次の 2 つの bounded context を使います。
 
-- `learning`: Manages Learning Goals and Study Sessions.
-- `certification`: Manages Certifications, exam schedules, attempts, and results.
+- `learning`: Learning Goal と Study Session を管理する。
+- `certification`: Certification、試験予定、受験、試験結果を管理する。
 
-Learning and certification are closely related in the product experience, but they have different lifecycle rules. A Learning Goal tracks study progress and completion. A Certification tracks exam intent, scheduled exams, attempts, and results. Keeping them as separate contexts avoids forcing exam lifecycle rules into the learning model.
+学習と資格はプロダクト体験上は近い関係にありますが、ライフサイクルのルールが異なります。Learning Goal は学習の進捗と完了を扱います。Certification は受験意思、試験予定、受験履歴、結果を扱います。これらを別コンテキストに分けることで、試験ライフサイクルのルールを learning model に押し込まないようにします。
 
-# Domain Model
+# ドメインモデル
 
-The learning context contains:
+learning context は次の要素を含みます。
 
-- `LearningGoal` as an Aggregate Root.
-- `StudySession` as an independent Aggregate Root.
-- Value Objects such as `LearningGoalId`, `StudySessionId`, `GoalPeriod`, `StudyDuration`, and `StudySessionContent`.
+- Aggregate Root としての `LearningGoal`。
+- 独立した Aggregate Root としての `StudySession`。
+- `LearningGoalId`、`StudySessionId`、`GoalPeriod`、`StudyDuration`、`StudySessionContent` などの Value Object。
 
-The certification context contains:
+certification context は次の要素を含みます。
 
-- `Certification` as an Aggregate Root.
-- `ExamAttempt` as an Entity inside `Certification`.
-- Value Objects such as `CertificationId`, `QualificationName`, `ExamPlan`, and `ExamResult`.
+- Aggregate Root としての `Certification`。
+- `Certification` 内の Entity としての `ExamAttempt`。
+- `CertificationId`、`QualificationName`、`ExamPlan`、`ExamResult` などの Value Object。
 
-# Aggregate
+# 集約
 
 ## LearningGoal
 
-`LearningGoal` owns goal identity, title, description, target period, and lifecycle status.
+`LearningGoal` は、目標の identity、title、description、target period、lifecycle status を所有します。
 
-It does not own `StudySession` records. A goal may have many sessions over time, and loading or changing the goal should not require loading the entire study history.
+`StudySession` の記録は所有しません。1 つの goal には時間とともに多数の session が紐づく可能性があり、goal を読み込んだり変更したりするために学習履歴全体を読み込むべきではありません。
 
-Repository save unit:
+Repository の保存単位:
 
 - `LearningGoal`
 
 ## StudySession
 
-`StudySession` is an independent Aggregate Root linked to a `LearningGoalId`.
+`StudySession` は、`LearningGoalId` に紐づく独立した Aggregate Root です。
 
-It records actual study work. It may be created and corrected independently from the goal lifecycle, while still enforcing local rules such as positive duration and non-empty content.
+実際に行った学習作業を記録します。goal のライフサイクルとは独立して作成・修正できます。一方で、正の duration や空でない content など、ローカルなルールは自身で守ります。
 
-Repository save unit:
+Repository の保存単位:
 
 - `StudySession`
 
 ## Certification
 
-`Certification` owns qualification name, certification lifecycle status, planned exam date, and exam attempts.
+`Certification` は、qualification name、certification lifecycle status、planned exam date、exam attempts を所有します。
 
-Exam attempts are modeled inside `Certification` because attempts are meaningful only within a certification target and usually have a small bounded history.
+Exam attempt は `Certification` の内側でモデル化します。attempt は特定の certification target の中でのみ意味を持ち、通常は小さな履歴に収まるためです。
 
-Repository save unit:
+Repository の保存単位:
 
-- `Certification`, including its `ExamAttempt` children.
+- `ExamAttempt` 子要素を含む `Certification`
 
-# Entities
+# Entity
 
-| Entity        | Aggregate     | Role                                             |
-| ------------- | ------------- | ------------------------------------------------ |
-| LearningGoal  | LearningGoal  | Tracks the lifecycle of a learning objective.    |
-| StudySession  | StudySession  | Records one completed study activity.            |
-| Certification | Certification | Tracks a certification target and exam progress. |
-| ExamAttempt   | Certification | Records one exam-taking event and result.        |
+| Entity        | Aggregate     | 役割                                 |
+| ------------- | ------------- | ------------------------------------ |
+| LearningGoal  | LearningGoal  | 学習目標のライフサイクルを追跡する。 |
+| StudySession  | StudySession  | 1 回分の完了した学習活動を記録する。 |
+| Certification | Certification | 資格目標と試験進捗を追跡する。       |
+| ExamAttempt   | Certification | 1 回の受験イベントと結果を記録する。 |
 
-# Value Objects
+# Value Object
 
-| Value Object        | Purpose                                    |
-| ------------------- | ------------------------------------------ |
-| LearningGoalId      | Identity for LearningGoal.                 |
-| StudySessionId      | Identity for StudySession.                 |
-| CertificationId     | Identity for Certification.                |
-| ExamAttemptId       | Identity for ExamAttempt.                  |
-| GoalTitle           | Non-empty Learning Goal title.             |
-| GoalPeriod          | Start date and optional target date.       |
-| StudyDuration       | Positive study duration.                   |
-| StudySessionContent | Non-empty study content and optional note. |
-| QualificationName   | Non-empty certification name.              |
-| ExamPlan            | Optional planned exam date.                |
-| ExamResult          | Exam outcome and result date.              |
+| Value Object        | 目的                              |
+| ------------------- | --------------------------------- |
+| LearningGoalId      | LearningGoal の identity。        |
+| StudySessionId      | StudySession の identity。        |
+| CertificationId     | Certification の identity。       |
+| ExamAttemptId       | ExamAttempt の identity。         |
+| GoalTitle           | 空ではない Learning Goal title。  |
+| GoalPeriod          | 開始日と任意の目標日。            |
+| StudyDuration       | 正の学習時間。                    |
+| StudySessionContent | 空ではない学習内容と任意の note。 |
+| QualificationName   | 空ではない certification name。   |
+| ExamPlan            | 任意の planned exam date。        |
+| ExamResult          | 試験結果と結果日。                |
 
-# Invariants
+# 不変条件
 
-- Learning Goal title must not be blank.
-- Learning Goal target date must not be before start date.
-- Completed Learning Goals cannot be returned to active without an explicit future design change.
-- Study Session must reference a Learning Goal by `LearningGoalId`.
-- Study Session duration must be positive.
-- Calculated study time may be zero when there are no matching Study Sessions.
-- Study Session date must be present.
-- Study Session content must not be blank.
-- Certification qualification name must not be blank.
-- Certification may have at most one current planned exam date.
-- Exam Attempt result date must be present when recording a result.
-- Exam Attempt belongs to exactly one Certification.
-- Passing an Exam Attempt changes Certification status to passed.
+- Learning Goal title は空にできない。
+- Learning Goal target date は start date より前にできない。
+- Completed な Learning Goal は、明示的な将来の設計変更なしに active へ戻せない。
+- Study Session は `LearningGoalId` で Learning Goal を参照しなければならない。
+- Study Session duration は正でなければならない。
+- 該当する Study Session がない場合、算出された学習時間は 0 になり得る。
+- Study Session date は必須。
+- Study Session content は空にできない。
+- Certification qualification name は空にできない。
+- Certification が現在持てる planned exam date は最大 1 つ。
+- Exam Attempt result date は、結果を記録するとき必須。
+- Exam Attempt は必ず 1 つの Certification に属する。
+- passed の Exam Attempt を記録すると、Certification status は passed になる。
 
-# Aggregate Relations
+# 集約間の関係
 
-`StudySession` references `LearningGoal` by identity only. This keeps the aggregate boundary small and avoids accidental modification of a goal while editing study history.
+`StudySession` は `LearningGoal` を identity のみで参照します。これにより aggregate boundary を小さく保ち、学習履歴の編集時に goal を誤って変更することを避けます。
 
-`Certification` may optionally reference a `LearningGoalId` when the certification is supported by a learning goal. The relationship is intentionally loose because not every certification needs a dedicated learning goal, and one learning goal may support multiple certifications.
+`Certification` は、資格が学習目標に支えられている場合に限り、任意で `LearningGoalId` を参照できます。この関係は意図的に疎にしています。すべての certification に専用の learning goal が必要なわけではなく、1 つの learning goal が複数の certification を支えることもあるためです。
 
-# Main Use Cases
+# 主なユースケース
 
-Learning use cases:
+learning のユースケース:
 
-- Create Learning Goal.
-- Change Learning Goal.
-- Complete Learning Goal.
-- Get active Learning Goals.
-- Record Study Session.
-- Revise Study Session.
-- Browse study history.
-- Calculate study time.
+- Learning Goal を作成する。
+- Learning Goal を変更する。
+- Learning Goal を完了する。
+- active な Learning Goal を取得する。
+- Study Session を記録する。
+- Study Session を修正する。
+- 学習履歴を閲覧する。
+- 学習時間を計算する。
 
-Certification use cases:
+certification のユースケース:
 
-- Register Certification.
-- Set exam schedule.
-- Record exam result.
-- Check Certification status.
+- Certification を登録する。
+- 試験予定を設定する。
+- 試験結果を記録する。
+- Certification status を確認する。
 
-Application services should be organized around coherent workflows, not one service class per use case.
+Application service は、ユースケースごとに機械的に 1 クラスを作るのではなく、まとまりのある workflow を基準に構成します。
 
-# Persistence
+# 永続化
 
-Domain repositories:
+Domain repository:
 
 - `LearningGoalRepository`
 - `StudySessionRepository`
 - `CertificationRepository`
 
-Repository interfaces are placed in the domain package because they describe domain persistence needs. Spring Data JPA adapters are placed in infrastructure packages.
+Repository interface は、domain が必要とする永続化要求を表すため domain package に置きます。Spring Data JPA adapter は infrastructure package に置きます。
 
-Domain models and JPA entities are separate. Infrastructure mappers convert between them.
+Domain model と JPA entity は分離します。Infrastructure mapper が相互変換を担当します。
 
-Flyway owns database schema migration. Hibernate validates the migrated schema at startup instead of creating or updating tables.
+Flyway が database schema migration を所有します。Hibernate は table を作成・更新せず、起動時に migration 済み schema を検証します。
 
 # Backend Package
 
-Current sample package:
+現在のサンプル package:
 
 ```text
 io.github.example.devtrack
 ```
 
-Replace `example` with the target GitHub user or organization before publishing if desired.
+公開前に必要であれば、`example` を対象の GitHub user または organization に置き換えます。
 
 Package structure:
 
@@ -247,7 +247,7 @@ ai-ddd-devtrack/
 +-- .env.example
 ```
 
-The implementation keeps backend and frontend separate so the DDD backend can stay focused while the frontend remains a thin API client.
+実装では backend と frontend を分離します。DDD backend は責務に集中させ、frontend は薄い API client として保ちます。
 
 # PlantUML File Structure
 
@@ -263,74 +263,74 @@ docs/plantuml/
     +-- record-exam-result.puml
 ```
 
-# Design Decisions
+# 設計判断
 
-## LearningGoal and StudySession are not the same Aggregate
+## LearningGoal と StudySession は同じ Aggregate ではない
 
-`LearningGoal` and `StudySession` should not be the same aggregate.
+`LearningGoal` と `StudySession` は同じ aggregate にしません。
 
-Reason:
+理由:
 
-- A Learning Goal is changed infrequently.
-- Study Sessions are added often.
-- Study history can grow without a natural small upper bound.
-- Loading a Learning Goal should not require loading every Study Session.
-- A Study Session can enforce its own invariants without modifying the Learning Goal.
+- Learning Goal は変更頻度が低い。
+- Study Session は頻繁に追加される。
+- 学習履歴は自然に小さな上限へ収まるとは限らない。
+- Learning Goal を読み込むために、すべての Study Session を読み込むべきではない。
+- Study Session は Learning Goal を変更せずに自身の不変条件を守れる。
 
-## StudySession is an independent Aggregate
+## StudySession は独立した Aggregate
 
-`StudySession` is an independent aggregate because it has its own identity, lifecycle, correction use case, and persistence needs.
+`StudySession` は、自身の identity、lifecycle、修正ユースケース、永続化要求を持つため、独立した aggregate とします。
 
-It references `LearningGoal` by `LearningGoalId`. Cross-aggregate rules, such as rejecting sessions for completed goals, should be handled by an application service after loading the goal and before saving the session.
+`StudySession` は `LearningGoal` を `LearningGoalId` で参照します。完了済み goal に対する session 記録を拒否するような集約をまたぐルールは、application service が goal を読み込んだあと、session を保存する前に扱います。
 
-## Certification is a separate Bounded Context
+## Certification は別の Bounded Context
 
-`Certification` belongs to the certification context, not the learning context.
+`Certification` は learning context ではなく certification context に属します。
 
-Reason:
+理由:
 
-- Exam scheduling and exam attempts have a different language and lifecycle from daily learning.
-- Certifications can exist without a Learning Goal.
-- A Learning Goal can support more than one Certification.
-- Keeping a loose reference avoids a large aggregate that mixes study and exam concerns.
+- 試験予定と受験履歴は、日々の学習とは異なる言語とライフサイクルを持つ。
+- Certification は Learning Goal なしでも存在できる。
+- 1 つの Learning Goal が複数の Certification を支えることがある。
+- 疎な参照にすることで、学習と試験の関心事を混ぜた大きな aggregate を避けられる。
 
-## Study Time is calculated from StudySession
+## 学習時間は StudySession から算出する
 
-The initial design calculates total study time from `StudySession` records instead of storing it on `LearningGoal`.
+初期設計では、総学習時間を `LearningGoal` に保存せず、`StudySession` の記録から算出します。
 
-Reason:
+理由:
 
-- Study Session is the source event-like record for actual study.
-- Derived totals can be recalculated consistently.
-- Avoids synchronization bugs between session edits and stored totals.
+- Study Session は実際の学習に対する source event-like record である。
+- 派生した合計値は一貫して再計算できる。
+- session の修正と保存済み合計値の同期バグを避けられる。
 
-If performance becomes a problem later, a read model or cached summary can be introduced outside the core aggregate.
+将来 performance が問題になった場合は、core aggregate の外側に read model や cached summary を導入できます。
 
-## ExamAttempt is an Entity inside Certification
+## ExamAttempt は Certification 内の Entity
 
-`ExamAttempt` is an Entity inside `Certification`, not a separate Aggregate.
+`ExamAttempt` は別 aggregate ではなく、`Certification` 内の Entity とします。
 
-Reason:
+理由:
 
-- Exam attempts are meaningful only for one Certification.
-- Attempt history is expected to be small.
-- Recording a passing result must update Certification status in the same consistency boundary.
-- There is no current use case for modifying an attempt independently from the Certification.
+- Exam attempt は 1 つの Certification の中でのみ意味を持つ。
+- Attempt history は小さく収まる想定である。
+- passed result の記録は、同じ整合性境界の中で Certification status を更新する必要がある。
+- 現時点では、Certification から独立して attempt を変更するユースケースがない。
 
-# Alternatives Considered
+# 検討した代替案
 
-## Store total study time on LearningGoal
+## 総学習時間を LearningGoal に保存する
 
-Rejected for the initial design because it duplicates information already represented by Study Sessions and creates update consistency concerns when sessions are edited.
+初期設計では採用しません。Study Session にすでに表現されている情報を重複して持つことになり、session 編集時の更新整合性に懸念があるためです。
 
-## Put LearningGoal, StudySession, and Certification in one context
+## LearningGoal、StudySession、Certification を 1 つの context に入れる
 
-Rejected because certification exam lifecycle rules would pollute the learning model. A loose identity reference gives enough connection without coupling the models.
+採用しません。資格試験のライフサイクルルールが learning model を汚すためです。identity による疎な参照であれば、model 同士を結合しすぎずに十分な関連を表現できます。
 
-## Model every use case as a separate service
+## すべてのユースケースを個別の service にする
 
-Rejected because it would produce mechanical application services. The application layer should group coherent workflows and delegate business rules to domain models.
+採用しません。機械的な application service が増えるためです。Application layer はまとまりのある workflow をグループ化し、business rule は domain model に委譲します。
 
-## Add Domain Events now
+## Domain Event を今すぐ追加する
 
-Deferred because no current requirement needs asynchronous domain reactions. Domain events can be added when there is a concrete use case, such as generating notifications or updating read models.
+現時点では見送ります。非同期の domain reaction を必要とする要件がまだないためです。通知生成や read model 更新など、具体的なユースケースが出た時点で追加できます。

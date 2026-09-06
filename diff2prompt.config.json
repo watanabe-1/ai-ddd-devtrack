@@ -1,6 +1,7 @@
 {
   "$schema": "node_modules/diff2prompt/dist/schema.json",
   "outputPath": "generated-prompt.txt",
+  "promptTemplateFile": "prompts/diff2prompt-pr-ja.md",
   "includeUntracked": true,
   "maxConsoleLines": 30,
   "exclude": [

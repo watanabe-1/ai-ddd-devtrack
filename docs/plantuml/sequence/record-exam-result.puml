@@ -1,5 +1,5 @@
 @startuml
-title Record Exam Result
+title Exam Result の記録
 
 actor User
 boundary "CertificationController" as Controller
@@ -12,10 +12,10 @@ Controller -> App : recordExamResult(command)
 App -> Repo : findById(certificationId)
 Repo --> App : Certification
 App -> Certification : recordExamResult(examAttempt)
-Certification -> Certification : append attempt
-Certification -> Certification : update status
+Certification -> Certification : attempt を追加
+Certification -> Certification : status を更新
 App -> Repo : save(certification)
-Repo --> App : saved Certification
+Repo --> App : 保存済み Certification
 App --> Controller : result
 Controller --> User : 200 OK
 
@@ -23,27 +23,26 @@ note right of Certification
 Type:
 Aggregate Root
 
-Responsibility:
-Own exam attempts and certification status.
+責務:
+exam attempt と certification status を所有する。
 
-Invariants:
-ExamAttempt belongs to this Certification.
-Passing result changes status to PASSED.
+Invariant:
+ExamAttempt はこの Certification に属する。
+passed result は status を PASSED に変更する。
 
-Persistence:
-Saved with ExamAttempt children as one aggregate.
+永続化:
+ExamAttempt 子要素とともに 1 つの aggregate として保存する。
 end note
 
 note right of App
 Type:
 Application Service
 
-Responsibility:
-Coordinate loading, invoking domain behavior, and saving.
+責務:
+読み込み、domain behavior の呼び出し、保存を調整する。
 
-Business Rules:
-Does not directly mutate status. Status change is handled by Certification.
+Business Rule:
+status を直接変更しない。status 変更は Certification が扱う。
 end note
 
 @enduml
-

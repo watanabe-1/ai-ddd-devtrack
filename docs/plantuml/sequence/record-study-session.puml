@@ -1,5 +1,5 @@
 @startuml
-title Record Study Session
+title Study Session の記録
 
 actor User
 boundary "StudySessionController" as Controller
@@ -12,11 +12,11 @@ User -> Controller : POST /study-sessions
 Controller -> App : recordStudySession(command)
 App -> GoalRepo : findById(learningGoalId)
 GoalRepo --> App : LearningGoal
-App -> App : verify goal can accept study session
+App -> App : goal が study session を受け付け可能か確認
 App -> Session : create(learningGoalId, studyDate, duration, content)
 Session --> App : StudySession
 App -> SessionRepo : save(session)
-SessionRepo --> App : saved StudySession
+SessionRepo --> App : 保存済み StudySession
 App --> Controller : result
 Controller --> User : 201 Created
 
@@ -24,30 +24,29 @@ note right of App
 Type:
 Application Service
 
-Responsibility:
-Coordinate the use case and transaction.
+責務:
+use case と transaction を調整する。
 
-Business Rules:
-Loads LearningGoal to avoid recording study against an invalid goal.
-Delegates StudySession invariants to the domain model.
+Business Rule:
+不正な goal へ学習を記録しないように LearningGoal を読み込む。
+StudySession の invariant は domain model に委譲する。
 
-Dependencies:
-Depends on domain repositories.
+依存:
+domain repository に依存する。
 end note
 
 note right of Session
 Type:
 Aggregate Root
 
-Responsibility:
-Validate and hold one study record.
+責務:
+1 件の学習記録を検証して保持する。
 
-Invariants:
-Duration is positive and content is not blank.
+Invariant:
+duration は正であり、content は空ではない。
 
-Persistence:
-Saved independently from LearningGoal.
+永続化:
+LearningGoal とは独立して保存する。
 end note
 
 @enduml
-
