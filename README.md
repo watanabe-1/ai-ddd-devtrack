@@ -90,6 +90,23 @@ Configured workflows:
 - `GHA static checks`: runs actionlint, zizmor, and ghalint against GitHub Actions
 - `Label PRs`: applies labels from `.github/labeler.yml`
 - `Auto Approve`: approves non-draft pull requests opened by the repository owner
+- `Renovate`: updates aqua-managed tools
+
+## Dependency Updates
+
+Dependabot is configured in `.github/dependabot.yml` for:
+
+- Root Bun workspace dependencies
+- Frontend npm lockfile dependencies
+- Backend Gradle dependencies and Gradle wrapper
+- Docker Compose images
+- GitHub Actions
+
+Dependabot runs as a GitHub-native service and does not require a repository
+secret for public dependencies.
+
+Renovate is configured in `.github/renovate.json` only for aqua-managed tools,
+matching the existing aqua comments in `aqua/aqua.yaml`.
 
 ## Run Locally
 

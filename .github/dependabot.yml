@@ -1,0 +1,93 @@
+version: 2
+updates:
+  # --- root Bun workspace ---
+  - package-ecosystem: "bun"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Asia/Tokyo"
+    cooldown:
+      default-days: 7
+    versioning-strategy: increase
+    groups:
+      bun:
+        patterns:
+          - "*"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+
+  # --- frontend npm lockfile ---
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:15"
+      timezone: "Asia/Tokyo"
+    cooldown:
+      default-days: 7
+    versioning-strategy: increase
+    groups:
+      frontend-npm:
+        patterns:
+          - "*"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+
+  # --- backend Gradle dependencies and wrapper ---
+  - package-ecosystem: "gradle"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:30"
+      timezone: "Asia/Tokyo"
+    cooldown:
+      default-days: 7
+    groups:
+      backend-gradle:
+        patterns:
+          - "*"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+
+  # --- Docker Compose services ---
+  - package-ecosystem: "docker-compose"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:45"
+      timezone: "Asia/Tokyo"
+    cooldown:
+      default-days: 7
+    groups:
+      docker-compose:
+        patterns:
+          - "*"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+
+  # --- GitHub Actions ---
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "10:00"
+      timezone: "Asia/Tokyo"
+    cooldown:
+      default-days: 7
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
