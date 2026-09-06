@@ -1,0 +1,61 @@
+frontend:
+  - changed-files:
+      - any-glob-to-any-file: "frontend/**"
+
+backend:
+  - changed-files:
+      - any-glob-to-any-file: "backend/**"
+
+domain:
+  - changed-files:
+      - any-glob-to-any-file: "backend/src/main/java/**/domain/**"
+      - any-glob-to-any-file: "docs/plantuml/domain/**"
+
+application:
+  - changed-files:
+      - any-glob-to-any-file: "backend/src/main/java/**/application/**"
+
+infrastructure:
+  - changed-files:
+      - any-glob-to-any-file: "backend/src/main/java/**/infrastructure/**"
+
+presentation:
+  - changed-files:
+      - any-glob-to-any-file: "backend/src/main/java/**/presentation/**"
+
+database:
+  - changed-files:
+      - any-glob-to-any-file: "backend/src/main/resources/db/**"
+      - any-glob-to-any-file: "compose.yaml"
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file: ".github/**"
+
+docs:
+  - changed-files:
+      - any-glob-to-any-file: "docs/**"
+      - any-glob-to-any-file: "**/*.md"
+      - any-glob-to-any-file: "**/*.puml"
+  - head-branch: ["^docs/"]
+
+test:
+  - changed-files:
+      - any-glob-to-any-file: "backend/src/test/**"
+      - any-glob-to-any-file: "**/*.test.*"
+  - head-branch: ["^test/"]
+
+feature:
+  - head-branch: ["^feature/", "^feat/"]
+
+fix:
+  - head-branch: ["^bugfix/", "^fix/", "^bug/"]
+
+chore:
+  - head-branch: ["^chore/"]
+
+refactor:
+  - head-branch: ["^refactor/"]
+
+hotfix:
+  - head-branch: ["^hotfix/"]
