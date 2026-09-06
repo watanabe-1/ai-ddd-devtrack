@@ -96,8 +96,7 @@ Configured workflows:
 
 Dependabot is configured in `.github/dependabot.yml` for:
 
-- Root Bun workspace dependencies
-- Frontend npm lockfile dependencies
+- Bun workspace dependencies, including the frontend workspace
 - Backend Gradle dependencies and Gradle wrapper
 - Docker Compose images
 - GitHub Actions
