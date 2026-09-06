@@ -48,7 +48,7 @@ aqua policy allow aqua/aqua-policy.yaml
 
 ## Diff Prompt の生成
 
-Git リポジトリ全体の差分から prompt を生成します。
+Git リポジトリ全体の差分から、commit message、PR title、branch name、PR 本文を生成するための prompt を作ります。Commit message と branch name は英語/ASCII の形式を保ち、PR 本文は日本語で生成するように指示します。
 
 ```bash
 bun run diff2prompt

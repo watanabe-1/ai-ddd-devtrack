@@ -1,26 +1,26 @@
 # Pull Request Template
 
-## 📝 Overview
+## 概要
 
-- What was done
+- 変更内容
 
-## 🧐 Motivation and Background
+## 背景
 
-- Why it was done
+- 変更理由
 
-## ✅ Changes
+## 変更種別
 
-- [ ] Feature added
-- [ ] Bug fixed
-- [ ] Refactored
-- [ ] Documentation updated
+- [ ] 機能追加
+- [ ] バグ修正
+- [ ] リファクタリング
+- [ ] ドキュメント更新
 
-## 💡 Notes / Screenshots
+## 補足 / スクリーンショット
 
-- Feel free to delete this section if not applicable
+- 該当しない場合はこのセクションを削除してください
 
-## 🔄 Testing
+## 確認
 
-- [ ] `bun run lint` passed
-- [ ] `bun run test` passed
-- [ ] Manual verification completed
+- [ ] `bun run lint` が成功
+- [ ] `bun run test` が成功
+- [ ] 手動確認済み
