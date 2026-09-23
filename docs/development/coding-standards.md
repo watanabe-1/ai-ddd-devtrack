@@ -32,6 +32,7 @@ PlantUML、Java、Markdown が矛盾している場合は PlantUML を baseline 
 | API contract    | OpenAPI generation / git diff | generated API type の drift                                                   |
 | Secret scan     | gitleaks                      | secret、token、credential の混入                                              |
 | Build           | Gradle / Vite                 | build failure、生成物作成、compile error                                      |
+| Dependency PR   | Renovate                      | 毎日の依存更新確認、Renovate 設定変更時と Renovate PR merge 後の再実行        |
 
 自動化で確認できる規約は、レビューコメントではなく設定やコマンドで直します。必要なら規約文より先に formatter、linter、type checker、test の設定を強化します。
 
