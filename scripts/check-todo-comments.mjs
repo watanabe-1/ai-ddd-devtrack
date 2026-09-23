@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -10,7 +10,7 @@ const files = execFileSync("git", ["ls-files", ...filePatterns], {
   encoding: "utf8",
 })
   .split(/\r?\n/u)
-  .filter(Boolean);
+  .filter((file) => file && existsSync(join(root, file)));
 const todoPattern = /\b(?:TODO|FIXME)\b(?!\([^)]+,\s*\d{4}-\d{2}-\d{2}\):\s*\S)/u;
 const commentPattern = /^\s*(?:\/\/|\/\*|\*|#)/u;
 const violations = [];

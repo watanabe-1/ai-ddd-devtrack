@@ -1,0 +1,19 @@
+name: Renovate auto approve
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+      - labeled
+
+permissions: {}
+
+jobs:
+  approve:
+    name: Auto approve Renovate PR
+    uses: watanabe-1/github-actions-common/.github/workflows/renovate-auto-approve.yml@c24a1f966b3d2d20ca30379e5a27ed137bfe760f # v1.0.2
+    permissions:
+      pull-requests: write
