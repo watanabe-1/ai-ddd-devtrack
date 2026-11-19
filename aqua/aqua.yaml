@@ -15,7 +15,7 @@ registries:
     ref: v4.584.0 # renovate: depName=aquaproj/aqua-registry
 
 packages:
-  - name: nodejs/node@v26.13.0
+  - name: nodejs/node@v26.13.1
   - name: oven-sh/bun@bun-v1.4.4
   - name: rhysd/actionlint@v1.7.12
   - name: reviewdog/reviewdog@v0.21.3
