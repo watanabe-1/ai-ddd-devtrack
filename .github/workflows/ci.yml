@@ -28,7 +28,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup toolchain
-        uses: watanabe-1/github-actions-common/actions/setup-toolchain@25793bf94b62c4948ce9742c8da78de3865822c9 # v1.1.0
+        uses: watanabe-1/github-actions-common/actions/setup-toolchain@0e9b6763a2f343233b82faed14089cf328d8f4b3 # v1.2.5
         with:
           node-version: aqua
           bun-version: aqua
@@ -81,7 +81,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup Java
-        uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
         with:
           distribution: temurin
           java-version: "21"
@@ -146,14 +146,14 @@ jobs:
           persist-credentials: false
 
       - name: Setup toolchain
-        uses: watanabe-1/github-actions-common/actions/setup-toolchain@25793bf94b62c4948ce9742c8da78de3865822c9 # v1.1.0
+        uses: watanabe-1/github-actions-common/actions/setup-toolchain@0e9b6763a2f343233b82faed14089cf328d8f4b3 # v1.2.5
         with:
           node-version: aqua
           bun-version: aqua
           bun-cache: "true"
 
       - name: Setup Java
-        uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
         with:
           distribution: temurin
           java-version: "21"
